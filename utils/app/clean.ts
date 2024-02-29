@@ -16,7 +16,7 @@ export const cleanSelectedConversation = (conversation: Conversation) => {
   if (!updatedConversation.model) {
     updatedConversation = {
       ...updatedConversation,
-      model: updatedConversation.model || OpenAIModels[OpenAIModelID.Mistral],
+      model: updatedConversation.model || OpenAIModels[OpenAIModelID.MistralOrca],
     };
   }
 
@@ -67,7 +67,7 @@ export const cleanConversationHistory = (history: any[]): Conversation[] => {
   return history.reduce((acc: any[], conversation) => {
     try {
       if (!conversation.model) {
-        conversation.model = OpenAIModels[OpenAIModelID.Mistral];
+        conversation.model = OpenAIModels[OpenAIModelID.MistralOrca];
       }
 
       if (!conversation.prompt) {

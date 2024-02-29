@@ -13,7 +13,7 @@ export interface OpenAIModel {
 }
 
 export enum OpenAIModelID {
-  Mistral = 'Mistral-Instruct',
+  MistralOrca = 'Mistral-OpenOrca',
   OpenChat = 'OpenChat-3.5-1210',
   DeepSeek = 'DeepSeek-coder-6.7B',
   Dolphin = 'Dolphin',
@@ -27,15 +27,15 @@ export enum OpenAIModelID {
 
 // in case the `DEFAULT_MODEL` environment variable is not set or set to an unsupported model
 // export const fallbackModelID = OpenAIModelID.Mistral;
-export const fallbackModelID = OpenAIModelID.Miqu;
+export const fallbackModelID = OpenAIModelID.MistralOrca;
 
 export const OpenAIModels: Record<OpenAIModelID, OpenAIModel> = {
-  [OpenAIModelID.Mistral]: {
-    id: OpenAIModelID.Mistral,
-    name: 'Mistral-Instruct',
-    sysPrompt: '<s>',
-    userPrefixPrompt: '[INST]',
-    userSuffixPrompt: ' [/INST]',
+  [OpenAIModelID.MistralOrca]: {
+    id: OpenAIModelID.MistralOrca,
+    name: 'Mistral-OpenOrca',
+    sysPrompt: '<|im_start|>system\nYou are an intelligent and helpful AI assistant who gives a quality response to whatever you are asked.\n<|im_end|>\n',
+    userPrefixPrompt: '<|im_start|>user\n',
+    userSuffixPrompt: '<|im_end|>\n<|im_start|>assistant',
     maxLength: 10000000,
     tokenLimit: 10000000,
   },
