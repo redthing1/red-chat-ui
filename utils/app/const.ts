@@ -1,3 +1,6 @@
+export const IS_PRODUCTION = process.env.NODE_ENV === 'production';
+// console.log(`is production: ${IS_PRODUCTION}`);
+
 export const DEFAULT_SYSTEM_PROMPT =
   process.env.NEXT_PUBLIC_DEFAULT_SYSTEM_PROMPT ||
   "You are ChatGPT, a large language model trained by OpenAI. Follow the user's instructions carefully. Respond using markdown.";

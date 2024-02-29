@@ -72,10 +72,11 @@ export const SettingDialog: FC<Props> = ({ open, onClose }) => {
               {t('Settings')}
             </div>
 
+            {/* theme selector */}
             <div className="text-sm font-bold mb-2 text-black dark:text-neutral-200">
               {t('Theme')}
             </div>
-
+            
             <select
               className="w-full cursor-pointer bg-transparent p-2 text-neutral-700 dark:text-neutral-200"
               value={state.theme}
@@ -86,6 +87,20 @@ export const SettingDialog: FC<Props> = ({ open, onClose }) => {
               <option value="dark">{t('Dark mode')}</option>
               <option value="light">{t('Light mode')}</option>
             </select>
+
+            {/* dev api base url */}
+            <div className="text-sm font-bold mt-4 mb-2 text-black dark:text-neutral-200">
+              {t('API Base URL')}
+            </div>
+
+            <input
+              type="text"
+              className="w-full p-2 border rounded-lg shadow border-neutral-500 text-neutral-900 dark:border-neutral-800 dark:border-opacity-50 dark:bg-white dark:text-black"
+              value={state.api_base_url || ''}
+              onChange={(event) =>
+                dispatch({ field: 'api_base_url', value: event.target.value })
+              }
+            />
 
             <button
               type="button"
