@@ -3,7 +3,7 @@ import { useContext } from 'react';
 
 import { useTranslation } from 'next-i18next';
 
-import { OpenAIModel } from '@/types/openai';
+import { OpenAIModel } from '@/types/openai_models';
 
 import HomeContext from '@/pages/api/home/home.context';
 

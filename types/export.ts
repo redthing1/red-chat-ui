@@ -1,6 +1,6 @@
 import { Conversation, Message } from './chat';
 import { FolderInterface } from './folder';
-import { OpenAIModel } from './openai';
+import { OpenAIModel } from './openai_models';
 import { Prompt } from './prompt';
 
 export type SupportedExportFormats =
