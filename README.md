@@ -1,49 +1,35 @@
 
-# Chatbot UI
+# red-chatbot-ui
 
-## Chatbot UI for llama.cpp server
+a [chatbot-ui](https://github.com/mckaywrigley/chatbot-ui) fork for local models. a continuation of [this fork](https://github.com/yportne13/chatbot-ui-llama.cpp), which made it local-first.
 
-### How to use
+# usage
 
-`step1` get the web
+## build the webui
 
-download from [release](https://github.com/yportne13/chatbot-ui-llama.cpp/releases) page and unzip it
-
-or
-
-clone this repository, and then:
-
-```
+in this respository:
+```sh
 npm install
 npm run build
 ```
 
-and you will get a `out/` dir.
+this will build a static webpage to `./out`.
 
-`step2` get llama.cpp server
+## build [llama.cpp](https://github.com/ggerganov/llama.cpp)
 
-if you are windows user, go to https://github.com/ggerganov/llama.cpp/releases to download a server.
-
-or if you are not windows user, go to https://github.com/ggerganov/llama.cpp, clone, and `make`.
-
-`step3` run
-
-for windows
-
-```
- .\server.exe --model /PATH_TO_MODEL --path THE_OUT_DIR_YOU_JUST_BUILD
+in your llama.cpp directory:
+```sh
+make -j
 ```
 
-or else
+## run the llama.cpp server with this frontend:
 
+run llama.cpp server:
+```sh
+/path/to/llama.cpp/server --model /path/to/mistral-7b-openorca.Q4_0.gguf --path /path/to/red-chatbot-ui/out --port 8000
 ```
- ./server --model /PATH_TO_MODEL --path THE_OUT_DIR_YOU_JUST_BUILD
-```
 
-and go to your browser: http://localhost:8080
-
-### Config
-
-change the language: in next-i18next.config.js, change defaultLocale
-
-add more model: types/openai.ts
+tips for llama.cpp server:
++ pass `-ngl <num_gpu_layers>` to put layers on the gpu
++ pass `-c <context_window> -n <context_window>` to set the context window
++ pass `--host <host>` or `--port <port>` to set the server endpoint
