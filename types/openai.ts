@@ -30,7 +30,7 @@ export const fallbackModelID = OpenAIModelID.Miqu;
 
 export const OpenAIModels: Record<OpenAIModelID, OpenAIModel> = {
   [OpenAIModelID.Mistral]: {
-    url: '/completion',// if you have more than one server, you can config this like 'http://127.0.0.1:2992/completion'
+    url: `${OPENAI_API_HOST}/completion`,// if you have more than one server, you can config this like 'http://127.0.0.1:2992/completion'
     id: OpenAIModelID.Mistral,
     name: 'Mistral-Instruct',
     sysPrompt: '<s>',
@@ -40,7 +40,7 @@ export const OpenAIModels: Record<OpenAIModelID, OpenAIModel> = {
     tokenLimit: 10000000,
   },
   [OpenAIModelID.OpenChat]: {
-    url: '/completion',// if you have more than one server, you can config this like 'http://127.0.0.1:2992/completion'
+    url: `${OPENAI_API_HOST}/completion`,// if you have more than one server, you can config this like 'http://127.0.0.1:2992/completion'
     id: OpenAIModelID.OpenChat,
     name: 'OpenChat-3.5-1210',
     sysPrompt: '',
@@ -50,7 +50,7 @@ export const OpenAIModels: Record<OpenAIModelID, OpenAIModel> = {
     tokenLimit: 10000000,
   },
   [OpenAIModelID.DeepSeek]: {
-    url: '/completion',
+    url: `${OPENAI_API_HOST}/completion`,
     id: OpenAIModelID.DeepSeek,
     name: 'DeepSeek-coder-6.7B',
     sysPrompt: 'You are an AI programming assistant, utilizing the Deepseek Coder model, developed by Deepseek Company, and you only answer questions related to computer science. For politically sensitive questions, security and privacy issues, and other non-computer science questions, you will refuse to answer.\n',
@@ -60,7 +60,7 @@ export const OpenAIModels: Record<OpenAIModelID, OpenAIModel> = {
     tokenLimit: 10000000,
   },
   [OpenAIModelID.Dolphin]: {
-    url: '/completion',
+    url: `${OPENAI_API_HOST}/completion`,
     id: OpenAIModelID.Dolphin,
     name: 'Dolphin',
     sysPrompt: '<|im_start|>system\nYou are Dolphin, a helpful AI assistant.<|im_end|>\n',
@@ -70,7 +70,7 @@ export const OpenAIModels: Record<OpenAIModelID, OpenAIModel> = {
     tokenLimit: 10000000,
   },
   [OpenAIModelID.Qwen]: {
-    url: '/completion',
+    url: `${OPENAI_API_HOST}/completion`,
     id: OpenAIModelID.Qwen,
     name: 'Qwen',
     sysPrompt: '<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n',
@@ -80,7 +80,7 @@ export const OpenAIModels: Record<OpenAIModelID, OpenAIModel> = {
     tokenLimit: 10000000,
   },
   [OpenAIModelID.Yi]: {
-    url: '/completion',
+    url: `${OPENAI_API_HOST}/completion`,
     id: OpenAIModelID.Yi,
     name: 'Yi',
     sysPrompt: '<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n',
@@ -90,7 +90,7 @@ export const OpenAIModels: Record<OpenAIModelID, OpenAIModel> = {
     tokenLimit: 10000000,
   },
   [OpenAIModelID.Solar]: {
-    url: '/completion',
+    url: `${OPENAI_API_HOST}/completion`,
     id: OpenAIModelID.Solar,
     name: 'Solar-Instruct',
     sysPrompt: '<s> ',
@@ -100,7 +100,7 @@ export const OpenAIModels: Record<OpenAIModelID, OpenAIModel> = {
     tokenLimit: 10000000,
   },
   [OpenAIModelID.NousHermes]: {
-    url: '/completion',
+    url: `${OPENAI_API_HOST}/completion`,
     id: OpenAIModelID.NousHermes,
     name: 'Nous-Hermes',
     sysPrompt: '<s> ',
@@ -110,7 +110,7 @@ export const OpenAIModels: Record<OpenAIModelID, OpenAIModel> = {
     tokenLimit: 10000000,
   },
   [OpenAIModelID.Zephyr]: {
-    url: '/completion',
+    url: `${OPENAI_API_HOST}/completion`,
     id: OpenAIModelID.Zephyr,
     name: 'Zephyr',
     sysPrompt: '<|system|>\nYou are a friendly chatbot who always responds in the style of a pirate.</s>',
@@ -120,7 +120,7 @@ export const OpenAIModels: Record<OpenAIModelID, OpenAIModel> = {
     tokenLimit: 10000000,
   },
   [OpenAIModelID.Miqu]: {
-    url: '/completion',
+    url: `${OPENAI_API_HOST}/completion`,
     id: OpenAIModelID.Miqu,
     name: 'Miqu',
     // sysPrompt: '<|im_start|>system\nYou are a highly intelligent and helpful AI assistant, who<|im_end|>\n',
