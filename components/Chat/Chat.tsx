@@ -147,7 +147,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
             prompt: concatenatePrompts(
               this_model.sysPrompt,
               this_model.userPrefixPrompt,
-              this_model.userSuffixPrompt,
+              this_model.userSuffixPrompt + this_model.assistantPrefixPrompt,
               updatedConversation.messages
             ),
             temperature: updatedConversation.temperature,
