@@ -30,7 +30,7 @@ let GPT_COMPLETIONS_ENDPOINT = '/v1/completions';
 export const OPENAI_API_COMPLETIONS_ENDPOINT = LLAMACPP_COMPLETIONS_ENDPOINT;
 
 export const DEFAULT_TEMPERATURE =
-  parseFloat(process.env.NEXT_PUBLIC_DEFAULT_TEMPERATURE || "1");
+  parseFloat(process.env.NEXT_PUBLIC_DEFAULT_TEMPERATURE || "0.8");
 
 export const OPENAI_API_TYPE =
   process.env.OPENAI_API_TYPE || 'openai';
