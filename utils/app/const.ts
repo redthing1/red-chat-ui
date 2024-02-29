@@ -23,6 +23,10 @@ if (typeof window !== 'undefined') {
 export const OPENAI_API_HOST = custom_openai_api_host || '/';
 console.log(`OPENAI_API_HOST: ${OPENAI_API_HOST}`);
 
+let LLAMACPP_COMPLETIONS_ENDPOINT = '/completion';
+let GPT_COMPLETIONS_ENDPOINT = '/v1/completions';
+export const OPENAI_API_COMPLETIONS_ENDPOINT = LLAMACPP_COMPLETIONS_ENDPOINT;
+
 export const DEFAULT_TEMPERATURE = 
   parseFloat(process.env.NEXT_PUBLIC_DEFAULT_TEMPERATURE || "1");
 

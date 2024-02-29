@@ -33,7 +33,7 @@ import { ModelSelect } from './ModelSelect';
 import { SystemPrompt } from './SystemPrompt';
 import { TemperatureSlider } from './Temperature';
 import { MemoizedChatMessage } from './MemoizedChatMessage';
-import { OPENAI_API_HOST } from '@/utils/app/const';
+import { OPENAI_API_COMPLETIONS_ENDPOINT } from '@/utils/app/const';
 
 interface Props {
   stopConversationRef: MutableRefObject<boolean>;
@@ -131,12 +131,12 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
         }
         const controller = new AbortController();
         console.log(updatedConversation.messages);
-        console.log(`openai_api_host: ${OPENAI_API_HOST}`);
         const this_model = updatedConversation.model;
         console.log(this_model);
-        console.log(this_model.url);
+        const completions_url = OPENAI_API_COMPLETIONS_ENDPOINT;
+        console.log(completions_url);
         console.log(updatedConversation.temperature);
-        const response = await fetch(this_model.url, {
+        const response = await fetch(completions_url, {
           headers: {
             'Content-Type': 'application/json',
           },
