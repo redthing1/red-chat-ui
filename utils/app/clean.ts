@@ -1,5 +1,5 @@
 import { Conversation } from '@/types/chat';
-import { OpenAIModelID, OpenAIModels } from '@/types/openai_models';
+import { OpenAIModelID, OpenAIModels, FALLBACK_OPENAI_MODEL_ID } from '@/types/openai_models';
 
 import { DEFAULT_SYSTEM_PROMPT, DEFAULT_TEMPERATURE } from './const';
 
@@ -16,7 +16,7 @@ export const cleanSelectedConversation = (conversation: Conversation) => {
   if (!updatedConversation.model) {
     updatedConversation = {
       ...updatedConversation,
-      model: updatedConversation.model || OpenAIModels[OpenAIModelID.MistralOrca],
+      model: updatedConversation.model || OpenAIModels[FALLBACK_OPENAI_MODEL_ID],
     };
   }
 
@@ -67,7 +67,7 @@ export const cleanConversationHistory = (history: any[]): Conversation[] => {
   return history.reduce((acc: any[], conversation) => {
     try {
       if (!conversation.model) {
-        conversation.model = OpenAIModels[OpenAIModelID.MistralOrca];
+        conversation.model = OpenAIModels[FALLBACK_OPENAI_MODEL_ID];
       }
 
       if (!conversation.prompt) {

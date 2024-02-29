@@ -13,9 +13,9 @@ export interface OpenAIModel {
 }
 
 export enum OpenAIModelID {
-  MistralOrca = 'Mistral-OpenOrca',
+  Mistral = 'Mistral-Instruct',
   OpenChat = 'OpenChat-3.5-1210',
-  DeepSeek = 'DeepSeek-coder-6.7B',
+  DeepSeek = 'DeepSeek-Coder-6.7B',
   Dolphin = 'Dolphin',
   Qwen = 'Qwen',
   Yi = 'Yi',
@@ -27,15 +27,15 @@ export enum OpenAIModelID {
 
 // in case the `DEFAULT_MODEL` environment variable is not set or set to an unsupported model
 // export const fallbackModelID = OpenAIModelID.Mistral;
-export const fallbackModelID = OpenAIModelID.MistralOrca;
+export const FALLBACK_OPENAI_MODEL_ID = OpenAIModelID.Dolphin;
 
 export const OpenAIModels: Record<OpenAIModelID, OpenAIModel> = {
-  [OpenAIModelID.MistralOrca]: {
-    id: OpenAIModelID.MistralOrca,
-    name: 'Mistral-OpenOrca',
-    sysPrompt: '<|im_start|>system\nYou are an intelligent and helpful AI assistant who gives a quality response to whatever you are asked.\n<|im_end|>\n',
-    userPrefixPrompt: '<|im_start|>user\n',
-    userSuffixPrompt: '<|im_end|>\n<|im_start|>assistant',
+  [OpenAIModelID.Mistral]: {
+    id: OpenAIModelID.Mistral,
+    name: 'Mistral-Instruct',
+    sysPrompt: '<s>',
+    userPrefixPrompt: '[INST]',
+    userSuffixPrompt: ' [/INST]',
     maxLength: 10000000,
     tokenLimit: 10000000,
   },
@@ -50,7 +50,7 @@ export const OpenAIModels: Record<OpenAIModelID, OpenAIModel> = {
   },
   [OpenAIModelID.DeepSeek]: {
     id: OpenAIModelID.DeepSeek,
-    name: 'DeepSeek-coder-6.7B',
+    name: 'DeepSeek-Coder-6.7B',
     sysPrompt: 'You are an AI programming assistant, utilizing the Deepseek Coder model, developed by Deepseek Company, and you only answer questions related to computer science. For politically sensitive questions, security and privacy issues, and other non-computer science questions, you will refuse to answer.\n',
     userPrefixPrompt: '### Instruction:\n',
     userSuffixPrompt: '\n### Response:\n',
