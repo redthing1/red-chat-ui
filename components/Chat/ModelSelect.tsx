@@ -45,7 +45,7 @@ export const ModelSelect = () => {
               className="dark:bg-[#343541] dark:text-white"
             >
               {model.id === defaultModelId
-                ? `Default (${model.name})`
+                ? `${model.name} (Default)`
                 : model.name}
             </option>
           ))}
