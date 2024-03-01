@@ -3,6 +3,7 @@ import {
   IconBolt,
   IconBrandGoogle,
   IconBrandSafari,
+  IconFileText,
   IconPlayerStop,
   IconRepeat,
   IconSend,
@@ -20,7 +21,7 @@ import {
 import { useTranslation } from 'next-i18next';
 
 import { Message } from '@/types/chat';
-import { Plugin } from '@/types/plugin';
+import { Plugin, PluginID } from '@/types/plugin';
 import { Prompt } from '@/types/prompt';
 
 import HomeContext from '@/pages/api/home/home.context';
@@ -287,10 +288,17 @@ export const ChatInput = ({
             onKeyDown={(e) => {}}
           >
             {/* switch on plugin */}
-            {plugin?.id === 'google-search' ? (
+            {/* {plugin?.id === PluginID.GOOGLE_SEARCH ? (
               <IconBrandGoogle size={20} />
-            ) : plugin?.id === 'web-browser' ? (
+            ) : plugin?.id === PluginID.WEB_BROWSER ? (
               <IconBrandSafari size={20} />
+            ) : (
+              <IconBolt size={20} />
+            )} */}
+            {plugin?.id === PluginID.WEB_BROWSER ? (
+              <IconBrandSafari size={20} />
+            ) : plugin?.id === PluginID.ASSISTANT_DOCS ? (
+              <IconFileText size={20} />
             ) : (
               <IconBolt size={20} />
             )}

@@ -3,7 +3,8 @@ import { KeyValuePair } from './data';
 export interface Plugin {
   id: PluginID;
   name: PluginName;
-  requiredKeys: KeyValuePair[];
+  enabled: boolean;
+  requiredKeys?: KeyValuePair[];
 }
 
 export interface PluginKey {
@@ -14,17 +15,20 @@ export interface PluginKey {
 export enum PluginID {
   GOOGLE_SEARCH = 'google-search',
   WEB_BROWSER = 'web-browser',
+  ASSISTANT_DOCS = 'assistant-docs',
 }
 
 export enum PluginName {
   GOOGLE_SEARCH = 'Google Search',
   WEB_BROWSER = 'Web Browser',
+  ASSISTANT_DOCS = 'Assistant Docs',
 }
 
 export const Plugins: Record<PluginID, Plugin> = {
   [PluginID.GOOGLE_SEARCH]: {
     id: PluginID.GOOGLE_SEARCH,
     name: PluginName.GOOGLE_SEARCH,
+    enabled: false,
     requiredKeys: [
       {
         key: 'GOOGLE_API_KEY',
@@ -39,7 +43,12 @@ export const Plugins: Record<PluginID, Plugin> = {
   [PluginID.WEB_BROWSER]: {
     id: PluginID.WEB_BROWSER,
     name: PluginName.WEB_BROWSER,
-    requiredKeys: [],
+    enabled: false,
+  },
+  [PluginID.ASSISTANT_DOCS]: {
+    id: PluginID.ASSISTANT_DOCS,
+    name: PluginName.ASSISTANT_DOCS,
+    enabled: true,
   },
 };
 
