@@ -88,9 +88,9 @@ export const SettingDialog: FC<Props> = ({ open, onClose }) => {
               <option value="dark">{t('Dark')}</option>
             </select>
 
-            {/* dev api base url */}
+            {/* chat api base url */}
             <div className="text-sm font-bold mt-4 mb-2 text-black dark:text-neutral-200">
-              {t('API Base URL')}
+              {t('Chat API Base URL')}
             </div>
 
             <input
