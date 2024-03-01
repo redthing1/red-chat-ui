@@ -14,10 +14,10 @@ export interface OpenAIModel {
 }
 
 export enum OpenAIModelID {
+  Dolphin = 'Dolphin',
   Mistral = 'Mistral-Instruct',
   OpenChat = 'OpenChat-3.5-1210',
   DeepSeek = 'DeepSeek-Coder-6.7B',
-  Dolphin = 'Dolphin',
   Solar = 'Solar',
   NousHermes = 'Nous-Hermes',
   Zephyr = 'Zephyr',
