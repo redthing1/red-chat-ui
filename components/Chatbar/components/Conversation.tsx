@@ -120,7 +120,7 @@ export const ConversationComponent = ({ conversation }: Props) => {
             messageIsStreaming ? 'disabled:cursor-not-allowed' : ''
           } ${
             selectedConversation?.id === conversation.id
-              ? 'bg-[#191b1c]/90'
+              ? 'bg-[#1b1e1f]/90'
               : ''
           }`}
           onClick={() => handleSelectConversation(conversation)}

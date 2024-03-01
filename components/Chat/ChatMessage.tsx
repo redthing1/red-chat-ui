@@ -133,7 +133,7 @@ export const ChatMessage: FC<Props> = memo(({ message, messageIndex, onEdit }) =
       }`}
       style={{ overflowWrap: 'anywhere' }}
     >
-      <div className="relative m-auto flex p-4 text-base md:max-w-2xl md:gap-6 md:py-6 lg:max-w-2xl lg:px-0 xl:max-w-3xl">
+      <div className="relative m-auto flex p-4 text-base md:max-w-2xl md:gap-6 md:py-4 lg:max-w-2xl lg:px-0 xl:max-w-3xl">
         <div className="min-w-[40px] text-right font-bold">
           {message.role === 'assistant' ? (
             <IconRobot size={30} />
@@ -149,7 +149,7 @@ export const ChatMessage: FC<Props> = memo(({ message, messageIndex, onEdit }) =
                 <div className="flex w-full flex-col">
                   <textarea
                     ref={textareaRef}
-                    className="w-full resize-none whitespace-pre-wrap border-none dark:bg-[#191b1c]"
+                    className="w-full resize-none whitespace-pre-wrap border-none dark:bg-[#1b1e1f]"
                     value={messageContent}
                     onChange={handleInputChange}
                     onKeyDown={handlePressEnter}
