@@ -6,6 +6,7 @@ export const getSettings = (): Settings => {
   let settings: Settings = {
     theme: 'dark',
     api_base_url: '/',
+    assistant_base_url: null,
   };
   const settingsJson = localStorage.getItem(STORAGE_KEY);
   if (settingsJson) {

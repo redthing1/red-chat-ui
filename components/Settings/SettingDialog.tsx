@@ -102,6 +102,20 @@ export const SettingDialog: FC<Props> = ({ open, onClose }) => {
               }
             />
 
+            {/* assistant base url */}
+            <div className="text-sm font-bold mt-4 mb-2 text-black dark:text-neutral-200">
+              {t('Assistant Base URL')}
+            </div>
+
+            <input
+              type="text"
+              className="w-full p-2 border rounded-lg shadow border-neutral-500 text-neutral-900 dark:border-neutral-800 dark:border-opacity-50 dark:bg-neutral-700 dark:text-neutral-200"
+              value={state.assistant_base_url || ''}
+              onChange={(event) =>
+                dispatch({ field: 'assistant_base_url', value: event.target.value })
+              }
+            />
+
             <button
               type="button"
               className="w-full px-4 py-2 mt-6 border rounded-lg shadow border-neutral-500 text-neutral-900 hover:bg-neutral-100 focus:outline-none dark:border-neutral-800 dark:border-opacity-50 dark:bg-[#62656a] dark:text-black dark:hover:bg-neutral-300"
