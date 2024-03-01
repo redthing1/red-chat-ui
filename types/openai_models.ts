@@ -29,6 +29,17 @@ export enum OpenAIModelID {
 export const FALLBACK_OPENAI_MODEL_ID = OpenAIModelID.Dolphin;
 
 export const OpenAIModels: Record<OpenAIModelID, OpenAIModel> = {
+  [OpenAIModelID.Dolphin]: {
+    id: OpenAIModelID.Dolphin,
+    name: 'Dolphin',
+    sysPrompt: '<|im_start|>system\nYou are Dolphin, a helpful AI assistant.<|im_end|>\n',
+    userPrefixPrompt: '<|im_start|>user\n',
+    userSuffixPrompt: '<|im_end|>\n',
+    assistantPrefixPrompt: '<|im_start|>assistant\n',
+    assistantSuffixPrompt: '<|im_end|>\n',
+    maxLength: 10000000,
+    tokenLimit: 10000000,
+  },
   [OpenAIModelID.Mistral]: {
     id: OpenAIModelID.Mistral,
     name: 'Mistral-Instruct',
@@ -56,17 +67,6 @@ export const OpenAIModels: Record<OpenAIModelID, OpenAIModel> = {
     userPrefixPrompt: '### Instruction:\n',
     userSuffixPrompt: '\n',
     assistantPrefixPrompt: '### Response:\n',
-    maxLength: 10000000,
-    tokenLimit: 10000000,
-  },
-  [OpenAIModelID.Dolphin]: {
-    id: OpenAIModelID.Dolphin,
-    name: 'Dolphin',
-    sysPrompt: '<|im_start|>system\nYou are Dolphin, a helpful AI assistant.<|im_end|>\n',
-    userPrefixPrompt: '<|im_start|>user\n',
-    userSuffixPrompt: '<|im_end|>\n',
-    assistantPrefixPrompt: '<|im_start|>assistant\n',
-    assistantSuffixPrompt: '<|im_end|>\n',
     maxLength: 10000000,
     tokenLimit: 10000000,
   },
