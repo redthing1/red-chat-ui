@@ -42,7 +42,7 @@ interface Props {
   stopConversationRef: MutableRefObject<boolean>;
 }
 
-function concatenatePrompts(sys_prompt: string, prefix_prompt: string, post_prompt: string, messages: Message[]) {
+function concatenateMessagesIntoPrompt(sys_prompt: string, prefix_prompt: string, post_prompt: string, messages: Message[]) {
   let result = sys_prompt;
   for (let i = 0; i < messages.length; i++) {
     //if (i % 2 === 1) { // Skip even indexed messages
@@ -154,7 +154,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
             },
             method: 'POST',
             body: JSON.stringify({
-              prompt: concatenatePrompts(
+              prompt: concatenateMessagesIntoPrompt(
                 this_model.sysPrompt,
                 this_model.userPrefixPrompt,
                 this_model.userSuffixPrompt + this_model.assistantPrefixPrompt,
