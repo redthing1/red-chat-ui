@@ -110,7 +110,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
         });
         homeDispatch({ field: 'loading', value: true });
         homeDispatch({ field: 'messageIsStreaming', value: true });
-        
+
         const chatBody: ChatBody = {
           model: updatedConversation.model,
           messages: updatedConversation.messages,
@@ -233,6 +233,20 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
                   value: updatedConversation,
                 });
               } else {
+                // if this is the last chunk, strip any junk from the end
+                if (streamingDone) {
+                  let cleanedText = textSoFar;
+                  // extra newlines at the end
+                  cleanedText = cleanedText.replace(/\n+$/, '');
+                  // any kind of <|...|> token at the end
+                  cleanedText = cleanedText.replace(/<\|.*?\|>$/, '');
+
+                  if (cleanedText !== textSoFar) {
+                    console.log('original text:', textSoFar);
+                    console.log('cleaned text:', cleanedText);
+                    textSoFar = cleanedText;
+                  }
+                }
                 // update the most recent message
                 const updatedMessages: Message[] =
                   updatedConversation.messages.map((message, index) => {
