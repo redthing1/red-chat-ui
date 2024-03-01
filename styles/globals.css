@@ -28,6 +28,11 @@
   height: 6px;
 }
 
+:focus-visible {
+  /* hack to disable ugly outlines */
+  outline: none !important;
+}
+
 html {
   background: #202123;
 }
