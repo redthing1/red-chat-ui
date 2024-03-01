@@ -23,7 +23,7 @@ import {
 import { throttle } from '@/utils/data/throttle';
 
 import { ChatBody, Conversation, Message } from '@/types/chat';
-import { Plugin } from '@/types/plugin';
+import { Plugin, PluginID, PluginType } from '@/types/plugin';
 
 import HomeContext from '@/pages/api/home/home.context';
 
@@ -136,6 +136,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
         messages: [...updatedMessages, message],
       };
     } else {
+      // add the user's message to the conversation
       updatedConversation = {
         ...selectedConversation,
         messages: [...selectedConversation.messages, message],
@@ -147,8 +148,28 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
       value: updatedConversation,
     });
     homeDispatch({ field: 'loading', value: true });
-    homeDispatch({ field: 'messageIsStreaming', value: true });
     const controller = new AbortController();
+
+    const settings = getSettings();
+
+    // define a function to cancel and fail in loading stage
+    const cancelAndFailLoadingStage = (errorMessage: string) => {
+      controller.abort();
+      // delete the last message
+      const updatedMessages = [...selectedConversation.messages];
+      updatedMessages.pop();
+      updatedConversation = {
+        ...selectedConversation,
+        messages: updatedMessages,
+      };
+      homeDispatch({
+        field: 'selectedConversation',
+        value: updatedConversation,
+      });
+      // stop loading
+      homeDispatch({ field: 'loading', value: false });
+      toast.error(errorMessage);
+    };
 
     // const chatBody: ChatBody = {
     //   model: updatedConversation.model,
@@ -187,6 +208,53 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
     const currentModel = updatedConversation.model;
     console.log('model', currentModel);
 
+    // apply prompt enhancer plugins
+    if (plugin && plugin.type === PluginType.PROMPT_ENHANCER) {
+      console.log('using prompt enhancer plugin', plugin);
+
+      // ensure the most recent message is from the user
+      if (updatedConversation.messages.length === 0 || updatedConversation.messages[updatedConversation.messages.length - 1].role !== 'user') {
+        console.error('Invalid conversation state: most recent message is not from the user');
+        cancelAndFailLoadingStage('Invalid conversation state');
+        return;
+      }
+
+      // store the updated user message
+      let updatedUserMessage: Message = {
+        role: 'user',
+        content: message.content,
+      }
+
+      if (plugin.id == PluginID.ASSISTANT_DOCS) {
+        let assistantCodexEndpoint = settings.assistant_base_url;
+
+        if (!assistantCodexEndpoint) {
+          cancelAndFailLoadingStage('Assistant Codex endpoint is not set');
+          return;
+        }
+
+        // get the message the user just submitted
+        let userMessage = message.content;
+
+        // for now, a stub
+        // delay for 1 second
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        // reformat the message:
+        let exampleContext = '[Context]: The moon is currently full due to server load, and cannot accomodate further players. This must be explained diplomatically.';
+
+        let enhancedMessageText = `${exampleContext}\n\n${userMessage}`;
+
+        // replace the user message with the enhanced message
+        updatedUserMessage = { role: 'user', content: enhancedMessageText };
+      }
+
+      updatedConversation.messages.pop();
+      updatedConversation.messages.push(updatedUserMessage);
+    }
+
+    // create request for completions endpoint
+    homeDispatch({ field: 'messageIsStreaming', value: true });
     const completionsRequestData = {
       prompt: createPromptFromMessages(
         currentModel,
@@ -196,7 +264,6 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
       stream: true,
     };
 
-    const settings = getSettings();
     const completions_url = joinUrls(settings.api_base_url, OPENAI_API_COMPLETIONS_ENDPOINT);
     console.log(`completions url: ${completions_url}`);
     // console.log(updatedConversation.temperature);

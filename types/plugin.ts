@@ -2,7 +2,8 @@ import { KeyValuePair } from './data';
 
 export interface Plugin {
   id: PluginID;
-  name: PluginName;
+  name: string;
+  type: PluginType;
   enabled: boolean;
   requiredKeys?: KeyValuePair[];
 }
@@ -18,16 +19,16 @@ export enum PluginID {
   ASSISTANT_DOCS = 'assistant-docs',
 }
 
-export enum PluginName {
-  GOOGLE_SEARCH = 'Google Search',
-  WEB_BROWSER = 'Web Browser',
-  ASSISTANT_DOCS = 'Assistant Docs',
+export enum PluginType {
+  PROMPT_ENHANCER,
+  CUSTOM_ENDPOINT,
 }
 
 export const Plugins: Record<PluginID, Plugin> = {
   [PluginID.GOOGLE_SEARCH]: {
     id: PluginID.GOOGLE_SEARCH,
-    name: PluginName.GOOGLE_SEARCH,
+    name: "Google Search",
+    type: PluginType.CUSTOM_ENDPOINT,
     enabled: false,
     requiredKeys: [
       {
@@ -42,12 +43,14 @@ export const Plugins: Record<PluginID, Plugin> = {
   },
   [PluginID.WEB_BROWSER]: {
     id: PluginID.WEB_BROWSER,
-    name: PluginName.WEB_BROWSER,
+    name: "Web Browser",
+    type: PluginType.CUSTOM_ENDPOINT,
     enabled: false,
   },
   [PluginID.ASSISTANT_DOCS]: {
     id: PluginID.ASSISTANT_DOCS,
-    name: PluginName.ASSISTANT_DOCS,
+    type: PluginType.PROMPT_ENHANCER,
+    name: "Assistant Docs",
     enabled: true,
   },
 };
