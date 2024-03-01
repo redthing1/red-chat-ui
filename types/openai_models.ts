@@ -9,8 +9,8 @@ export interface OpenAIModel {
   sysPrompt: string;
   userPrefixPrompt: string;
   userSuffixPrompt: string;
-  assistantPrefixPrompt: string;
-  assistantResponseHiddenTokens?: string;
+  assistantPrefixPrompt?: string;
+  assistantSuffixPrompt?: string;
 }
 
 export enum OpenAIModelID {
@@ -18,8 +18,6 @@ export enum OpenAIModelID {
   OpenChat = 'OpenChat-3.5-1210',
   DeepSeek = 'DeepSeek-Coder-6.7B',
   Dolphin = 'Dolphin',
-  Qwen = 'Qwen',
-  Yi = 'Yi',
   Solar = 'Solar',
   NousHermes = 'Nous-Hermes',
   Zephyr = 'Zephyr',
@@ -68,26 +66,7 @@ export const OpenAIModels: Record<OpenAIModelID, OpenAIModel> = {
     userPrefixPrompt: '<|im_start|>user\n',
     userSuffixPrompt: '<|im_end|>\n',
     assistantPrefixPrompt: '<|im_start|>assistant\n',
-    maxLength: 10000000,
-    tokenLimit: 10000000,
-  },
-  [OpenAIModelID.Qwen]: {
-    id: OpenAIModelID.Qwen,
-    name: 'Qwen',
-    sysPrompt: '<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n',
-    userPrefixPrompt: '<|im_start|>user\n',
-    userSuffixPrompt: '<|im_end|>\n',
-    assistantPrefixPrompt: '<|im_start|>assistant\n',
-    maxLength: 10000000,
-    tokenLimit: 10000000,
-  },
-  [OpenAIModelID.Yi]: {
-    id: OpenAIModelID.Yi,
-    name: 'Yi',
-    sysPrompt: '<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n',
-    userPrefixPrompt: '<|im_start|>user\n',
-    userSuffixPrompt: '<|im_end|>\n',
-    assistantPrefixPrompt: '<|im_start|>assistant\n',
+    assistantSuffixPrompt: '<|im_end|>\n',
     maxLength: 10000000,
     tokenLimit: 10000000,
   },
@@ -129,7 +108,7 @@ export const OpenAIModels: Record<OpenAIModelID, OpenAIModel> = {
     userPrefixPrompt: '<|im_start|>user\n',
     userSuffixPrompt: '<|im_end|>\n',
     assistantPrefixPrompt: '<|im_start|>assistant\n',
-    assistantResponseHiddenTokens: '<|im_end|>',
+    assistantSuffixPrompt: '<|im_end|>\n',
     maxLength: 10000000,
     tokenLimit: 10000000,
   },

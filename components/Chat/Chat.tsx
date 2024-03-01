@@ -37,22 +37,60 @@ import { SystemPrompt } from './SystemPrompt';
 import { TemperatureSlider } from './Temperature';
 import { MemoizedChatMessage } from './MemoizedChatMessage';
 import { OPENAI_API_COMPLETIONS_ENDPOINT } from '@/utils/app/const';
+import { OpenAIModel } from '@/types/openai_models';
 
 interface Props {
   stopConversationRef: MutableRefObject<boolean>;
 }
 
-function concatenateMessagesIntoPrompt(sys_prompt: string, prefix_prompt: string, post_prompt: string, messages: Message[]) {
-  let result = sys_prompt;
+// function concatenateMessagesIntoPrompt(sys_prompt: string, prefix_prompt: string, post_prompt: string, messages: Message[]) {
+//   let result = sys_prompt;
+//   for (let i = 0; i < messages.length; i++) {
+//     //if (i % 2 === 1) { // Skip even indexed messages
+//     if (messages[i].role === 'assistant') {
+//       result += `${messages[i].content}`;
+//     } else {
+//       result += `${prefix_prompt}${messages[i].content}${post_prompt}`;
+//     }
+//   }
+//   // console.log('concatenated prompt:', result);
+//   return result;
+// }
+
+function createPromptFromMessages(model: OpenAIModel, messages: Message[]) {
+  let system = model.sysPrompt;
+  let userPrefix = model.userPrefixPrompt;
+  let userSuffix = model.userSuffixPrompt;
+  let assistantPrefix = model.assistantPrefixPrompt ?? '';
+  let assistantSuffix = model.assistantSuffixPrompt ?? '';
+  // console.log('model:', model);
+  // console.log('user prefix:', userPrefix);
+  // console.log('user suffix:', userSuffix);
+  // console.log('assistant prefix:', assistantPrefix);
+  // console.log('assistant suffix:', assistantSuffix);
+
+  // system prompt
+  let chatLog = model.sysPrompt;
+
   for (let i = 0; i < messages.length; i++) {
-    //if (i % 2 === 1) { // Skip even indexed messages
     if (messages[i].role === 'assistant') {
-      result += `${messages[i].content}`;
-    } else {
-      result += `${prefix_prompt}${messages[i].content}${post_prompt}`;
+      // assistant message
+      chatLog += `${assistantPrefix}${messages[i].content}${assistantSuffix}`;
+    } else if (messages[i].role === 'user') {
+      // user message
+      chatLog += `${userPrefix}${messages[i].content}${userSuffix}`;
     }
   }
-  return result;
+  let lastMessage = messages[messages.length - 1];
+
+  // if the last message is from the user, add the assistant prefix
+  if (lastMessage.role === 'user') {
+    chatLog += assistantPrefix;
+  }
+
+  console.debug('prompt:', chatLog);
+
+  return chatLog;
 }
 
 export const Chat = memo(({ stopConversationRef }: Props) => {
@@ -154,10 +192,14 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
             },
             method: 'POST',
             body: JSON.stringify({
-              prompt: concatenateMessagesIntoPrompt(
-                this_model.sysPrompt,
-                this_model.userPrefixPrompt,
-                this_model.userSuffixPrompt + this_model.assistantPrefixPrompt,
+              // prompt: concatenateMessagesIntoPrompt(
+              //   this_model.sysPrompt,
+              //   this_model.userPrefixPrompt,
+              //   this_model.userSuffixPrompt + this_model.assistantPrefixPrompt,
+              //   updatedConversation.messages
+              // ),
+              prompt: createPromptFromMessages(
+                this_model,
                 updatedConversation.messages
               ),
               temperature: updatedConversation.temperature,
