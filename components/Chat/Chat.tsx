@@ -242,8 +242,11 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
                   cleanedText = cleanedText.replace(/<\|.*?\|>$/, '');
 
                   if (cleanedText !== textSoFar) {
-                    console.log('original text:', textSoFar);
-                    console.log('cleaned text:', cleanedText);
+                    // get the diff (get the part that was stripped off the end)
+                    let strippedText = textSoFar.slice(cleanedText.length);
+                    console.log('cleaned response, removed:', strippedText);
+                    // console.log('original text:', textSoFar);
+                    // console.log('cleaned text:', cleanedText);
                     textSoFar = cleanedText;
                   }
                 }
