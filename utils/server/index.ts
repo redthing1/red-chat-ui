@@ -1,5 +1,5 @@
 import { Message } from '@/types/chat';
-import { OpenAIModel } from '@/types/openai_models_models';
+import { OpenAIModel } from '@/types/openai_models';
 
 import { AZURE_DEPLOYMENT_ID, OPENAI_API_HOST, OPENAI_API_TYPE, OPENAI_API_VERSION, OPENAI_ORGANIZATION, SYSPROMPT, PREFIXPROMPT, POSTPROMPT } from '../app/const';
 
