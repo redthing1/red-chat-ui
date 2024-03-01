@@ -11,6 +11,7 @@ import { FC, memo, useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 
 import { updateConversation } from '@/utils/app/conversation';
+import { APP_CHAT_FONT } from '@/utils/app/fonts';
 
 import { Message } from '@/types/chat';
 
@@ -126,7 +127,7 @@ export const ChatMessage: FC<Props> = memo(({ message, messageIndex, onEdit }) =
 
   return (
     <div
-      className={`group md:px-4 ${
+      className={`group md:px-4 ${APP_CHAT_FONT.className} ${
         message.role === 'assistant'
           ? 'border-b border-black/10 bg-gray-50 text-gray-800 dark:border-gray-900/50 dark:bg-[#191918] dark:text-gray-100'
           : 'border-b border-black/10 bg-white text-gray-800 dark:border-gray-900/50 dark:bg-[#191b1c] dark:text-gray-100'

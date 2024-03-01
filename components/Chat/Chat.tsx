@@ -15,6 +15,7 @@ import { useTranslation } from 'next-i18next';
 import { getEndpoint } from '@/utils/app/api';
 import { joinUrls } from '@/utils/app/url';
 import { getSettings } from '@/utils/app/settings';
+import { APP_CHAT_FONT } from '@/utils/app/fonts';
 import {
   saveConversation,
   saveConversations,
@@ -398,7 +399,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
   }, [messagesEndRef]);
 
   return (
-    <div className="relative flex-1 overflow-hidden bg-white dark:bg-[#191b1c]">
+    <div className={`chat-ui-root relative flex-1 overflow-hidden bg-white dark:bg-[#191b1c]`}>
       {!(apiKey || serverSideApiKeyIsSet) ? (
         <div className="mx-auto flex h-full w-[300px] flex-col justify-center space-y-6 sm:w-[600px]">
           <div className="text-center text-4xl font-bold text-black dark:text-white">

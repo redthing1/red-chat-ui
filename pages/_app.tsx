@@ -12,7 +12,7 @@ function App({ Component, pageProps }: AppProps<{}>) {
   const queryClient = new QueryClient();
 
   return (
-    <div className={APP_UI_FONT.className}>
+    <div className={`${APP_UI_FONT.className}`}>
       <Toaster />
       <QueryClientProvider client={queryClient}>
         <Component {...pageProps} />
