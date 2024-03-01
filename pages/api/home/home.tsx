@@ -357,8 +357,8 @@ const Home = ({
       }}
     >
       <Head>
-        <title>AI Chat</title>
-        <meta name="description" content="ChatGPT but better." />
+        <title>RedChat</title>
+        <meta name="description" content="ChatGPT UI for local AI models." />
         <meta
           name="viewport"
           content="height=device-height ,width=device-width, initial-scale=1, user-scalable=no"
