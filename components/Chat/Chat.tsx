@@ -131,7 +131,8 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           });
         }
         const controller = new AbortController();
-        console.log(updatedConversation.messages);
+        // console.log(updatedConversation.messages);
+        console.log('conversation', updatedConversation);
         const this_model = updatedConversation.model;
         console.log(this_model);
         const settings = getSettings();
@@ -179,29 +180,37 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           homeDispatch({ field: 'loading', value: false });
           const reader = data.getReader();
           const decoder = new TextDecoder();
-          let done = false;
-          let isFirst = true;
-          let text = '';
-          while (!done) {
+          let streamingDone = false;
+          let isFirstChunk = true;
+          let textSoFar = '';
+          while (!streamingDone) {
             if (stopConversationRef.current === true) {
               controller.abort();
-              done = true;
+              streamingDone = true;
               break;
             }
-            const { value, done: doneReading } = await reader.read();
-            done = doneReading;
-            const chunkValue1 = decoder.decode(value);
-            let json;
+            // read the next chunk of the streaming completion
+            const { value: rawChunk, done: isLastChunk } = await reader.read();
+            streamingDone = isLastChunk;
+            const decodedChunk = decoder.decode(rawChunk);
+            // console.log('raw chunk:', rawChunk);
+            // console.log('decoded chunk:', decodedChunk);
+            let chunkJson;
             try {
-              json = JSON.parse(chunkValue1.slice(6));
+              // skip "data: ", the json is after it
+              chunkJson = JSON.parse(decodedChunk.slice(6));
             } catch (e) {
-              json = { stop: true, content: '' }
+              chunkJson = { stop: true, content: '' }
             }
-            const chunkValue = json.content
-            done = json.stop;
-            text += chunkValue;
-            if (isFirst) {
-              isFirst = false;
+            // console.log('json chunk:', json);
+            const chunkValue = chunkJson.content;
+            streamingDone = chunkJson.stop;
+            textSoFar += chunkValue;
+            if (isFirstChunk) {
+              // if it's the first chunk
+              isFirstChunk = false;
+
+              // add a new message with the assistant role
               const updatedMessages: Message[] = [
                 ...updatedConversation.messages,
                 { role: 'assistant', content: chunkValue },
@@ -215,12 +224,14 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
                 value: updatedConversation,
               });
             } else {
+              // update the most recent message
               const updatedMessages: Message[] =
                 updatedConversation.messages.map((message, index) => {
                   if (index === updatedConversation.messages.length - 1) {
+                    // update the content of the most recent message
                     return {
                       ...message,
-                      content: text,
+                      content: textSoFar,
                     };
                   }
                   return message;
