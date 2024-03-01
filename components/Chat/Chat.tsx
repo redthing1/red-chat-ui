@@ -255,6 +255,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
     //   homeDispatch({ field: 'messageIsStreaming', value: false });
     // }
 
+    // if this is the first message, update the conversation name
     if (updatedConversation.messages.length === 1) {
       const { content } = message;
       const customName =
@@ -264,18 +265,24 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
         name: customName,
       };
     }
+
+    // no longer loading, we are now going to stream the response
     homeDispatch({ field: 'loading', value: false });
     const reader = data.getReader();
     const decoder = new TextDecoder();
     let streamingDone = false;
     let isFirstChunk = true;
     let textSoFar = '';
+
+    // stream the response text
     while (!streamingDone) {
+      // handle the stop conversation signal
       if (stopConversationRef.current === true) {
         controller.abort();
         streamingDone = true;
         break;
       }
+
       // read the next chunk of the streaming completion
       const { value: rawChunk, done: isLastChunk } = await reader.read();
       streamingDone = isLastChunk;
@@ -328,6 +335,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
             textSoFar = cleanedText;
           }
         }
+
         // update the most recent message
         const updatedMessages: Message[] =
           updatedConversation.messages.map((message, index) => {
@@ -350,6 +358,8 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
         });
       }
     }
+
+    // save the conversation
     saveConversation(updatedConversation);
     const updatedConversations: Conversation[] = conversations.map(
       (conversation) => {
@@ -359,11 +369,17 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
         return conversation;
       },
     );
+
+    // if the conversation is not in the list, add it
     if (updatedConversations.length === 0) {
       updatedConversations.push(updatedConversation);
     }
+
+    // save the conversations
     homeDispatch({ field: 'conversations', value: updatedConversations });
     saveConversations(updatedConversations);
+
+    // done streaming
     homeDispatch({ field: 'messageIsStreaming', value: false });
   };
 
