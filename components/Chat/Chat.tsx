@@ -13,6 +13,7 @@ import toast from 'react-hot-toast';
 import { useTranslation } from 'next-i18next';
 
 import { getEndpoint } from '@/utils/app/api';
+import { joinUrls } from '@/utils/app/url';
 import { getSettings } from '@/utils/app/settings';
 import {
   saveConversation,
@@ -136,7 +137,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
         const this_model = updatedConversation.model;
         console.log(this_model);
         const settings = getSettings();
-        const completions_url = new URL(OPENAI_API_COMPLETIONS_ENDPOINT, settings.api_base_url).href;
+        const completions_url = joinUrls(settings.api_base_url, OPENAI_API_COMPLETIONS_ENDPOINT);
         console.log(`completions url: ${completions_url}`);
         // console.log(updatedConversation.temperature);
         const response = await fetch(completions_url, {
