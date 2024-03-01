@@ -129,21 +129,21 @@ export const ChatMessage: FC<Props> = memo(({ message, messageIndex, onEdit }) =
     <div
       className={`group md:px-4 ${APP_CHAT_FONT.className} ${
         message.role === 'assistant'
-          ? 'border-b border-black/10 bg-gray-50 text-gray-800 dark:border-gray-800/50 dark:bg-[#191918] dark:text-gray-100'
-          : 'border-b border-black/10 bg-white text-gray-800 dark:border-gray-800/50 dark:bg-[#191918] dark:text-gray-100'
+          ? 'border-b border-black/10 bg-gray-50 text-gray-800 dark:border-gray-850/50 dark:bg-[#191918] dark:text-gray-100'
+          : 'border-b border-black/10 bg-white text-gray-800 dark:border-gray-850/50 dark:bg-[#191918] dark:text-gray-100'
       }`}
       style={{ overflowWrap: 'anywhere' }}
     >
-      <div className="relative m-auto flex p-4 text-base md:max-w-2xl md:gap-6 md:py-6 lg:max-w-2xl lg:px-0 xl:max-w-3xl">
-        <div className="min-w-[40px] text-right font-bold">
+      <div className="relative m-auto flex p-4 text-base md:max-w-2xl md:gap-6 md:py-4 lg:max-w-2xl lg:px-0 xl:max-w-3xl">
+        <div className="min-w-[32px] text-right font-bold">
           {message.role === 'assistant' ? (
-            <IconRobot size={30} />
+            <IconRobot size={24} />
           ) : (
-            <IconUser size={30} />
+            <IconUser size={24} />
           )}
         </div>
 
-        <div className="prose mt-[-2px] w-full dark:prose-invert">
+        <div className="prose w-full dark:prose-invert">
           {message.role === 'user' ? (
             <div className="flex w-full">
               {isEditing ? (
