@@ -231,7 +231,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
       }
 
       if (plugin.id == PluginID.ASSISTANT_DOCS) {
-        let codexEndpoint = settings.codex_api_base_url;
+        let codexEndpoint = settings.codexApiBaseUrl;
 
         if (!codexEndpoint) {
           cancelAndFailLoadingStage('Codex endpoint is not set');
@@ -269,10 +269,10 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
       stream: true,
     };
 
-    const completions_url = joinUrls(settings.chat_api_base_url, OPENAI_API_COMPLETIONS_ENDPOINT);
-    console.log(`completions url: ${completions_url}`);
+    const completionsUrl = joinUrls(settings.chatApiBaseUrl, OPENAI_API_COMPLETIONS_ENDPOINT);
+    console.log(`completions url: ${completionsUrl}`);
     // console.log(updatedConversation.temperature);
-    const response = await fetch(completions_url, {
+    const response = await fetch(completionsUrl, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -433,7 +433,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
     }
 
     // if this is the first message, set the conversation name
-    if (isFreshConversation && settings.auto_title_conversations) {
+    if (isFreshConversation && settings.autoTitleConversations) {
       // summarize the above exchange
       let summarizeExchangePrompt = 'Give a few word very short title of the above conversation. Do not mention conversation.';
 
@@ -451,7 +451,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
         n_predict: 32,
       };
 
-      const summarizeResponse = await fetch(completions_url, {
+      const summarizeResponse = await fetch(completionsUrl, {
         headers: {
           'Content-Type': 'application/json',
         },

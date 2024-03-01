@@ -5,9 +5,9 @@ const STORAGE_KEY = 'settings';
 export const getSettings = (): Settings => {
   let settings: Settings = {
     theme: 'dark',
-    chat_api_base_url: '/',
-    codex_api_base_url: null,
-    auto_title_conversations: false,
+    chatApiBaseUrl: '/',
+    codexApiBaseUrl: null,
+    autoTitleConversations: false,
   };
   const settingsJson = localStorage.getItem(STORAGE_KEY);
   if (settingsJson) {

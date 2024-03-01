@@ -96,9 +96,9 @@ export const SettingDialog: FC<Props> = ({ open, onClose }) => {
             <input
               type="text"
               className="w-full p-2 border rounded-lg shadow border-neutral-500 text-neutral-900 dark:border-neutral-800 dark:border-opacity-50 dark:bg-neutral-700 dark:text-neutral-200"
-              value={state.chat_api_base_url || ''}
+              value={state.chatApiBaseUrl || ''}
               onChange={(event) =>
-                dispatch({ field: 'chat_api_base_url', value: event.target.value })
+                dispatch({ field: 'chatApiBaseUrl', value: event.target.value })
               }
             />
 
@@ -110,9 +110,9 @@ export const SettingDialog: FC<Props> = ({ open, onClose }) => {
             <input
               type="text"
               className="w-full p-2 border rounded-lg shadow border-neutral-500 text-neutral-900 dark:border-neutral-800 dark:border-opacity-50 dark:bg-neutral-700 dark:text-neutral-200"
-              value={state.codex_api_base_url || ''}
+              value={state.codexApiBaseUrl || ''}
               onChange={(event) =>
-                dispatch({ field: 'codex_api_base_url', value: event.target.value })
+                dispatch({ field: 'codexApiBaseUrl', value: event.target.value })
               }
             />
 
@@ -124,10 +124,10 @@ export const SettingDialog: FC<Props> = ({ open, onClose }) => {
             <input
               type="checkbox"
               className="w-6 h-6"
-              checked={state.auto_title_conversations}
+              checked={state.autoTitleConversations}
               onChange={(event) =>
                 dispatch({
-                  field: 'auto_title_conversations',
+                  field: 'autoTitleConversations',
                   value: event.target.checked,
                 })
               }
