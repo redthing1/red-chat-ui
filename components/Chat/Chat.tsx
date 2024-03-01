@@ -12,7 +12,7 @@ import toast from 'react-hot-toast';
 
 import { useTranslation } from 'next-i18next';
 
-import { getEndpoint } from '@/utils/app/api';
+import { EndpointType, getEndpointType } from '@/utils/app/api';
 import { joinUrls } from '@/utils/app/url';
 import { getSettings } from '@/utils/app/settings';
 import { APP_CHAT_FONT } from '@/utils/app/fonts';
@@ -110,6 +110,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
         });
         homeDispatch({ field: 'loading', value: true });
         homeDispatch({ field: 'messageIsStreaming', value: true });
+        
         const chatBody: ChatBody = {
           model: updatedConversation.model,
           messages: updatedConversation.messages,
@@ -117,182 +118,192 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           prompt: updatedConversation.prompt,
           temperature: updatedConversation.temperature,
         };
-        //const endpoint = getEndpoint(plugin);
-        let body;
-        if (!plugin) {
-          body = JSON.stringify(chatBody);
-        } else {
-          body = JSON.stringify({
-            ...chatBody,
-            googleAPIKey: pluginKeys
-              .find((key) => key.pluginId === 'google-search')
-              ?.requiredKeys.find((key) => key.key === 'GOOGLE_API_KEY')?.value,
-            googleCSEId: pluginKeys
-              .find((key) => key.pluginId === 'google-search')
-              ?.requiredKeys.find((key) => key.key === 'GOOGLE_CSE_ID')?.value,
+
+        const endpointType = getEndpointType(plugin);
+
+        // let requestBody;
+        // if (!plugin) {
+        //   requestBody = JSON.stringify(chatBody);
+        // } else {
+        //   console.log('plugin', plugin);
+        //   requestBody = JSON.stringify({
+        //     ...chatBody,
+        //     googleAPIKey: pluginKeys
+        //       .find((key) => key.pluginId === 'google-search')
+        //       ?.requiredKeys.find((key) => key.key === 'GOOGLE_API_KEY')?.value,
+        //     googleCSEId: pluginKeys
+        //       .find((key) => key.pluginId === 'google-search')
+        //       ?.requiredKeys.find((key) => key.key === 'GOOGLE_CSE_ID')?.value,
+        //   });
+        // }
+        // console.log('request body', requestBody);
+
+        if (endpointType == EndpointType.OpenAIChat) {
+          const controller = new AbortController();
+          // console.log(updatedConversation.messages);
+          console.log('conversation', updatedConversation);
+          const this_model = updatedConversation.model;
+          console.log(this_model);
+          const settings = getSettings();
+          const completions_url = joinUrls(settings.api_base_url, OPENAI_API_COMPLETIONS_ENDPOINT);
+          console.log(`completions url: ${completions_url}`);
+          // console.log(updatedConversation.temperature);
+          const response = await fetch(completions_url, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            method: 'POST',
+            body: JSON.stringify({
+              prompt: concatenatePrompts(
+                this_model.sysPrompt,
+                this_model.userPrefixPrompt,
+                this_model.userSuffixPrompt + this_model.assistantPrefixPrompt,
+                updatedConversation.messages
+              ),
+              temperature: updatedConversation.temperature,
+              stream: true,
+            }),
           });
-        }
-        const controller = new AbortController();
-        // console.log(updatedConversation.messages);
-        console.log('conversation', updatedConversation);
-        const this_model = updatedConversation.model;
-        console.log(this_model);
-        const settings = getSettings();
-        const completions_url = joinUrls(settings.api_base_url, OPENAI_API_COMPLETIONS_ENDPOINT);
-        console.log(`completions url: ${completions_url}`);
-        // console.log(updatedConversation.temperature);
-        const response = await fetch(completions_url, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          method: 'POST',
-          body: JSON.stringify({
-            prompt: concatenatePrompts(
-              this_model.sysPrompt,
-              this_model.userPrefixPrompt,
-              this_model.userSuffixPrompt + this_model.assistantPrefixPrompt,
-              updatedConversation.messages
-            ),
-            temperature: updatedConversation.temperature,
-            stream: true,
-          }),
-        });
-        if (!response.ok) {
-          homeDispatch({ field: 'loading', value: false });
-          homeDispatch({ field: 'messageIsStreaming', value: false });
-          toast.error(response.statusText);
-          return;
-        }
-        const data = response.body;
-        if (!data) {
-          homeDispatch({ field: 'loading', value: false });
-          homeDispatch({ field: 'messageIsStreaming', value: false });
-          return;
-        }
-        if (!plugin) {
-          if (updatedConversation.messages.length === 1) {
-            const { content } = message;
-            const customName =
-              content.length > 30 ? content.substring(0, 30) + '...' : content;
+          if (!response.ok) {
+            homeDispatch({ field: 'loading', value: false });
+            homeDispatch({ field: 'messageIsStreaming', value: false });
+            toast.error(response.statusText);
+            return;
+          }
+          const data = response.body;
+          if (!data) {
+            homeDispatch({ field: 'loading', value: false });
+            homeDispatch({ field: 'messageIsStreaming', value: false });
+            return;
+          }
+          if (!plugin) {
+            if (updatedConversation.messages.length === 1) {
+              const { content } = message;
+              const customName =
+                content.length > 30 ? content.substring(0, 30) + '...' : content;
+              updatedConversation = {
+                ...updatedConversation,
+                name: customName,
+              };
+            }
+            homeDispatch({ field: 'loading', value: false });
+            const reader = data.getReader();
+            const decoder = new TextDecoder();
+            let streamingDone = false;
+            let isFirstChunk = true;
+            let textSoFar = '';
+            while (!streamingDone) {
+              if (stopConversationRef.current === true) {
+                controller.abort();
+                streamingDone = true;
+                break;
+              }
+              // read the next chunk of the streaming completion
+              const { value: rawChunk, done: isLastChunk } = await reader.read();
+              streamingDone = isLastChunk;
+              const decodedChunk = decoder.decode(rawChunk);
+              // console.log('raw chunk:', rawChunk);
+              // console.log('decoded chunk:', decodedChunk);
+              let chunkJson;
+              try {
+                // skip "data: ", the json is after it
+                chunkJson = JSON.parse(decodedChunk.slice(6));
+              } catch (e) {
+                chunkJson = { stop: true, content: '' }
+              }
+              // console.log('json chunk:', json);
+              const chunkValue = chunkJson.content;
+              streamingDone = chunkJson.stop;
+              textSoFar += chunkValue;
+              if (isFirstChunk) {
+                // if it's the first chunk
+                isFirstChunk = false;
+
+                // add a new message with the assistant role
+                const updatedMessages: Message[] = [
+                  ...updatedConversation.messages,
+                  { role: 'assistant', content: chunkValue },
+                ];
+                updatedConversation = {
+                  ...updatedConversation,
+                  messages: updatedMessages,
+                };
+                homeDispatch({
+                  field: 'selectedConversation',
+                  value: updatedConversation,
+                });
+              } else {
+                // update the most recent message
+                const updatedMessages: Message[] =
+                  updatedConversation.messages.map((message, index) => {
+                    if (index === updatedConversation.messages.length - 1) {
+                      // update the content of the most recent message
+                      return {
+                        ...message,
+                        content: textSoFar,
+                      };
+                    }
+                    return message;
+                  });
+                updatedConversation = {
+                  ...updatedConversation,
+                  messages: updatedMessages,
+                };
+                homeDispatch({
+                  field: 'selectedConversation',
+                  value: updatedConversation,
+                });
+              }
+            }
+            saveConversation(updatedConversation);
+            const updatedConversations: Conversation[] = conversations.map(
+              (conversation) => {
+                if (conversation.id === selectedConversation.id) {
+                  return updatedConversation;
+                }
+                return conversation;
+              },
+            );
+            if (updatedConversations.length === 0) {
+              updatedConversations.push(updatedConversation);
+            }
+            homeDispatch({ field: 'conversations', value: updatedConversations });
+            saveConversations(updatedConversations);
+            homeDispatch({ field: 'messageIsStreaming', value: false });
+          } else {
+            console.log('handling response for plugin', plugin, response);
+            const { answer } = await response.json();
+            const updatedMessages: Message[] = [
+              ...updatedConversation.messages,
+              { role: 'assistant', content: answer },
+            ];
             updatedConversation = {
               ...updatedConversation,
-              name: customName,
+              messages: updatedMessages,
             };
-          }
-          homeDispatch({ field: 'loading', value: false });
-          const reader = data.getReader();
-          const decoder = new TextDecoder();
-          let streamingDone = false;
-          let isFirstChunk = true;
-          let textSoFar = '';
-          while (!streamingDone) {
-            if (stopConversationRef.current === true) {
-              controller.abort();
-              streamingDone = true;
-              break;
+            homeDispatch({
+              field: 'selectedConversation',
+              value: updateConversation,
+            });
+            saveConversation(updatedConversation);
+            const updatedConversations: Conversation[] = conversations.map(
+              (conversation) => {
+                if (conversation.id === selectedConversation.id) {
+                  return updatedConversation;
+                }
+                return conversation;
+              },
+            );
+            if (updatedConversations.length === 0) {
+              updatedConversations.push(updatedConversation);
             }
-            // read the next chunk of the streaming completion
-            const { value: rawChunk, done: isLastChunk } = await reader.read();
-            streamingDone = isLastChunk;
-            const decodedChunk = decoder.decode(rawChunk);
-            // console.log('raw chunk:', rawChunk);
-            // console.log('decoded chunk:', decodedChunk);
-            let chunkJson;
-            try {
-              // skip "data: ", the json is after it
-              chunkJson = JSON.parse(decodedChunk.slice(6));
-            } catch (e) {
-              chunkJson = { stop: true, content: '' }
-            }
-            // console.log('json chunk:', json);
-            const chunkValue = chunkJson.content;
-            streamingDone = chunkJson.stop;
-            textSoFar += chunkValue;
-            if (isFirstChunk) {
-              // if it's the first chunk
-              isFirstChunk = false;
-
-              // add a new message with the assistant role
-              const updatedMessages: Message[] = [
-                ...updatedConversation.messages,
-                { role: 'assistant', content: chunkValue },
-              ];
-              updatedConversation = {
-                ...updatedConversation,
-                messages: updatedMessages,
-              };
-              homeDispatch({
-                field: 'selectedConversation',
-                value: updatedConversation,
-              });
-            } else {
-              // update the most recent message
-              const updatedMessages: Message[] =
-                updatedConversation.messages.map((message, index) => {
-                  if (index === updatedConversation.messages.length - 1) {
-                    // update the content of the most recent message
-                    return {
-                      ...message,
-                      content: textSoFar,
-                    };
-                  }
-                  return message;
-                });
-              updatedConversation = {
-                ...updatedConversation,
-                messages: updatedMessages,
-              };
-              homeDispatch({
-                field: 'selectedConversation',
-                value: updatedConversation,
-              });
-            }
+            homeDispatch({ field: 'conversations', value: updatedConversations });
+            saveConversations(updatedConversations);
+            homeDispatch({ field: 'loading', value: false });
+            homeDispatch({ field: 'messageIsStreaming', value: false });
           }
-          saveConversation(updatedConversation);
-          const updatedConversations: Conversation[] = conversations.map(
-            (conversation) => {
-              if (conversation.id === selectedConversation.id) {
-                return updatedConversation;
-              }
-              return conversation;
-            },
-          );
-          if (updatedConversations.length === 0) {
-            updatedConversations.push(updatedConversation);
-          }
-          homeDispatch({ field: 'conversations', value: updatedConversations });
-          saveConversations(updatedConversations);
-          homeDispatch({ field: 'messageIsStreaming', value: false });
-        } else {
-          const { answer } = await response.json();
-          const updatedMessages: Message[] = [
-            ...updatedConversation.messages,
-            { role: 'assistant', content: answer },
-          ];
-          updatedConversation = {
-            ...updatedConversation,
-            messages: updatedMessages,
-          };
-          homeDispatch({
-            field: 'selectedConversation',
-            value: updateConversation,
-          });
-          saveConversation(updatedConversation);
-          const updatedConversations: Conversation[] = conversations.map(
-            (conversation) => {
-              if (conversation.id === selectedConversation.id) {
-                return updatedConversation;
-              }
-              return conversation;
-            },
-          );
-          if (updatedConversations.length === 0) {
-            updatedConversations.push(updatedConversation);
-          }
-          homeDispatch({ field: 'conversations', value: updatedConversations });
-          saveConversations(updatedConversations);
-          homeDispatch({ field: 'loading', value: false });
-          homeDispatch({ field: 'messageIsStreaming', value: false });
+        } else if (endpointType === EndpointType.GoogleSearch) {
+          console.log('endpoint type is google search');
         }
       }
     },
