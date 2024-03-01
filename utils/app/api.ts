@@ -2,7 +2,8 @@ import { Plugin, PluginID } from '@/types/plugin';
 
 export enum EndpointType {
   OpenAIChat,
-  GoogleSearch
+  GoogleSearch,
+  WebBrowser,
 }
 
 // export const getEndpoint = (plugin: Plugin | null) => {
@@ -24,6 +25,10 @@ export const getEndpointType = (plugin: Plugin | null) => {
 
   if (plugin.id === PluginID.GOOGLE_SEARCH) {
     return EndpointType.GoogleSearch;
+  }
+
+  if (plugin.id === PluginID.WEB_BROWSER) {
+    return EndpointType.WebBrowser;
   }
 
   return EndpointType.OpenAIChat;

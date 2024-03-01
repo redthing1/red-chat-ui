@@ -13,10 +13,12 @@ export interface PluginKey {
 
 export enum PluginID {
   GOOGLE_SEARCH = 'google-search',
+  WEB_BROWSER = 'web-browser',
 }
 
 export enum PluginName {
   GOOGLE_SEARCH = 'Google Search',
+  WEB_BROWSER = 'Web Browser',
 }
 
 export const Plugins: Record<PluginID, Plugin> = {
@@ -33,6 +35,11 @@ export const Plugins: Record<PluginID, Plugin> = {
         value: '',
       },
     ],
+  },
+  [PluginID.WEB_BROWSER]: {
+    id: PluginID.WEB_BROWSER,
+    name: PluginName.WEB_BROWSER,
+    requiredKeys: [],
   },
 };
 

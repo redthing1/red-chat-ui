@@ -2,6 +2,7 @@ import {
   IconArrowDown,
   IconBolt,
   IconBrandGoogle,
+  IconBrandSafari,
   IconPlayerStop,
   IconRepeat,
   IconSend,
@@ -285,7 +286,14 @@ export const ChatInput = ({
             onClick={() => setShowPluginSelect(!showPluginSelect)}
             onKeyDown={(e) => {}}
           >
-            {plugin ? <IconBrandGoogle size={20} /> : <IconBolt size={20} />}
+            {/* switch on plugin */}
+            {plugin?.id === 'google-search' ? (
+              <IconBrandGoogle size={20} />
+            ) : plugin?.id === 'web-browser' ? (
+              <IconBrandSafari size={20} />
+            ) : (
+              <IconBolt size={20} />
+            )}
           </button>
 
           {showPluginSelect && (

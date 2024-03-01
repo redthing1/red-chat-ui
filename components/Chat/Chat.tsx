@@ -363,6 +363,8 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           }
         } else if (endpointType === EndpointType.GoogleSearch) {
           console.log('endpoint type is google search');
+        } else if (endpointType === EndpointType.WebBrowser) {
+          console.log('endpoint type is web browser');
         }
       }
     },
