@@ -125,7 +125,7 @@ const Folder = ({
               <IconCaretRight size={18} />
             )}
 
-            <div className="relative max-h-5 flex-1 text-ellipsis whitespace-nowrap break-all text-left text-[12.5px] leading-3">
+            <div className="relative max-h-5 flex-1 overflow-x-hidden text-ellipsis whitespace-nowrap break-all text-left text-[12.5px] leading-3">
               {currentFolder.name}
             </div>
           </button>
