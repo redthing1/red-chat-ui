@@ -168,7 +168,7 @@ export const ChatMessage: FC<Props> = memo(({ message, messageIndex, onEdit }) =
                     }}
                   />
 
-                  <div className="mt-10 flex justify-center space-x-4">
+                  <div className="mt-2 flex justify-center space-x-4">
                     <button
                       className="h-[40px] rounded-md bg-blue-500 px-4 py-1 text-sm font-medium text-white enabled:hover:bg-blue-600 disabled:opacity-50"
                       onClick={handleEditMessage}
