@@ -7,4 +7,4 @@ const alegreyaSans = Alegreya_Sans({ subsets: ['latin'], weight: '400' });
 const martelSans = Martel_Sans({ subsets: ['latin'], weight: '400' });
 
 export const APP_UI_FONT = inter;
-export const APP_CHAT_FONT = alegreyaSans;
+export const APP_CHAT_FONT = inter;
