@@ -7,6 +7,7 @@ export const getSettings = (): Settings => {
     theme: 'dark',
     chat_api_base_url: '/',
     codex_api_base_url: null,
+    auto_title_conversations: false,
   };
   const settingsJson = localStorage.getItem(STORAGE_KEY);
   if (settingsJson) {

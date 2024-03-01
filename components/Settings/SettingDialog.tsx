@@ -116,6 +116,23 @@ export const SettingDialog: FC<Props> = ({ open, onClose }) => {
               }
             />
 
+            {/* whether to auto title conversations */}
+            <div className="text-sm font-bold mt-4 mb-2 text-black dark:text-neutral-200">
+              {t('Auto Title Conversations')}
+            </div>
+
+            <input
+              type="checkbox"
+              className="w-6 h-6"
+              checked={state.auto_title_conversations}
+              onChange={(event) =>
+                dispatch({
+                  field: 'auto_title_conversations',
+                  value: event.target.checked,
+                })
+              }
+            />
+
             <button
               type="button"
               className="w-full px-4 py-2 mt-6 border rounded-lg shadow border-neutral-500 text-neutral-900 hover:bg-neutral-100 focus:outline-none dark:border-neutral-800 dark:border-opacity-50 dark:bg-[#62656a] dark:text-black dark:hover:bg-neutral-300"

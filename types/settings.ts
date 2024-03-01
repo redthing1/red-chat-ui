@@ -2,4 +2,5 @@ export interface Settings {
   theme: 'light' | 'dark';
   chat_api_base_url: string;
   codex_api_base_url: string | null;
+  auto_title_conversations: boolean;
 }

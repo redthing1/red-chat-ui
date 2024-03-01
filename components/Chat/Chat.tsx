@@ -147,6 +147,10 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
       field: 'selectedConversation',
       value: updatedConversation,
     });
+
+    const isFreshConversation = updatedConversation.messages.length === 1;
+    // console.log('is fresh conversation:', isFreshConversation);
+
     homeDispatch({ field: 'loading', value: true });
     const controller = new AbortController();
 
@@ -170,6 +174,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
       homeDispatch({ field: 'loading', value: false });
       toast.error(errorMessage);
     };
+
 
     // const chatBody: ChatBody = {
     //   model: updatedConversation.model,
@@ -323,7 +328,8 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
     // }
 
     // if this is the first message, update the conversation name
-    if (updatedConversation.messages.length === 1) {
+    if (isFreshConversation) {
+      // set conversation name to be the beginning of the user's request
       const { content } = message;
       const customName =
         content.length > 30 ? content.substring(0, 30) + '...' : content;
@@ -424,6 +430,64 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           value: updatedConversation,
         });
       }
+    }
+
+    // if this is the first message, set the conversation name
+    if (isFreshConversation && settings.auto_title_conversations) {
+      // summarize the above exchange
+      let summarizeExchangePrompt = 'Give a few word very short title of the above conversation. Do not mention conversation.';
+
+      let messagesForSummarize: Message[] = [
+        ...updatedConversation.messages,
+        { role: 'user', content: summarizeExchangePrompt }
+      ];
+
+      const completionRequestData = {
+        prompt: createPromptFromMessages(
+          currentModel,
+          messagesForSummarize
+        ),
+        temperature: 0.6,
+        n_predict: 32,
+      };
+
+      const summarizeResponse = await fetch(completions_url, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+        body: JSON.stringify(completionRequestData),
+      });
+      if (!summarizeResponse.ok) {
+        homeDispatch({ field: 'loading', value: false });
+        homeDispatch({ field: 'messageIsStreaming', value: false });
+        console.error('Failed to summarize conversation', summarizeResponse);
+        toast.error('Failed to summarize conversation');
+        return;
+      }
+      const summarizeData = await summarizeResponse.json();
+      // clean up the title
+      let summarizeContent = summarizeData.content.trim();
+      // remove anything like "Summary: " or "Title: " at the beginning
+      summarizeContent = summarizeContent.replace(/^[A-Z].+?: ?/, '');
+      // remove any newlines
+      summarizeContent = summarizeContent.replace(/\n/g, ' ');
+      // remove any <|...|> tokens
+      summarizeContent = summarizeContent.replace(/<\|.+\|>/g, '');
+      // remove any quotes
+      summarizeContent = summarizeContent.replace(/['"`]/g, '');
+      // remove any trailing punctuation
+      summarizeContent = summarizeContent.replace(/[.,;:!?]$/, '');
+      // final trim
+      summarizeContent = summarizeContent.trim();
+
+      console.log('proposed title:', summarizeContent);
+
+      const customName = summarizeContent.length > 30 ? summarizeContent.substring(0, 30) + '...' : summarizeContent;
+      updatedConversation = {
+        ...updatedConversation,
+        name: customName,
+      };
     }
 
     // save the conversation
