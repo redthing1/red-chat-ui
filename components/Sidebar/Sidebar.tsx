@@ -47,7 +47,7 @@ const Sidebar = <T,>({
   };
 
   const highlightDrop = (e: any) => {
-    e.target.style.background = '#343541';
+    e.target.style.background = '#191b1c';
   };
 
   const removeHighlight = (e: any) => {
@@ -61,7 +61,7 @@ const Sidebar = <T,>({
       >
         <div className="flex items-center">
           <button
-            className="text-sidebar flex w-[190px] flex-shrink-0 cursor-pointer select-none items-center gap-3 rounded-md border border-white/20 p-3 text-white transition-colors duration-200 hover:bg-gray-500/10"
+            className="text-sidebar flex w-[190px] flex-shrink-0 cursor-pointer select-none items-center gap-3 rounded-md border border-[#31312f] p-3 text-white transition-colors duration-200 hover:bg-gray-500/10"
             onClick={() => {
               handleCreateItem();
               handleSearchTerm('');
@@ -72,7 +72,7 @@ const Sidebar = <T,>({
           </button>
 
           <button
-            className="ml-2 flex flex-shrink-0 cursor-pointer items-center gap-3 rounded-md border border-white/20 p-3 text-sm text-white transition-colors duration-200 hover:bg-gray-500/10"
+            className="ml-2 flex flex-shrink-0 cursor-pointer items-center gap-3 rounded-md border border-[#31312f] p-3 text-sm text-white transition-colors duration-200 hover:bg-gray-500/10"
             onClick={handleCreateFolder}
           >
             <IconFolderPlus size={16} />
@@ -86,7 +86,7 @@ const Sidebar = <T,>({
 
         <div className="flex-grow overflow-auto">
           {items?.length > 0 && (
-            <div className="flex border-b border-white/20 pb-2">
+            <div className="flex border-b border-[#31312f] pb-2">
               {folderComponent}
             </div>
           )}

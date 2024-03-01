@@ -78,14 +78,14 @@ export const SettingDialog: FC<Props> = ({ open, onClose }) => {
             </div>
             
             <select
-              className="w-full cursor-pointer bg-transparent p-2 text-neutral-700 dark:text-neutral-200"
+              className="w-full cursor-pointer bg-transparent p-2 text-neutral-700 dark:bg-neutral-700 dark:text-neutral-200"
               value={state.theme}
               onChange={(event) =>
                 dispatch({ field: 'theme', value: event.target.value })
               }
             >
-              <option value="dark">{t('Dark mode')}</option>
-              <option value="light">{t('Light mode')}</option>
+              <option value="light">{t('Light')}</option>
+              <option value="dark">{t('Dark')}</option>
             </select>
 
             {/* dev api base url */}
@@ -95,7 +95,7 @@ export const SettingDialog: FC<Props> = ({ open, onClose }) => {
 
             <input
               type="text"
-              className="w-full p-2 border rounded-lg shadow border-neutral-500 text-neutral-900 dark:border-neutral-800 dark:border-opacity-50 dark:bg-white dark:text-black"
+              className="w-full p-2 border rounded-lg shadow border-neutral-500 text-neutral-900 dark:border-neutral-800 dark:border-opacity-50 dark:bg-neutral-700 dark:text-neutral-200"
               value={state.api_base_url || ''}
               onChange={(event) =>
                 dispatch({ field: 'api_base_url', value: event.target.value })
@@ -104,7 +104,7 @@ export const SettingDialog: FC<Props> = ({ open, onClose }) => {
 
             <button
               type="button"
-              className="w-full px-4 py-2 mt-6 border rounded-lg shadow border-neutral-500 text-neutral-900 hover:bg-neutral-100 focus:outline-none dark:border-neutral-800 dark:border-opacity-50 dark:bg-white dark:text-black dark:hover:bg-neutral-300"
+              className="w-full px-4 py-2 mt-6 border rounded-lg shadow border-neutral-500 text-neutral-900 hover:bg-neutral-100 focus:outline-none dark:border-neutral-800 dark:border-opacity-50 dark:bg-[#62656a] dark:text-black dark:hover:bg-neutral-300"
               onClick={() => {
                 handleSave();
                 onClose();
