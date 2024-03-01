@@ -226,10 +226,10 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
       }
 
       if (plugin.id == PluginID.ASSISTANT_DOCS) {
-        let assistantCodexEndpoint = settings.assistant_base_url;
+        let codexEndpoint = settings.codex_api_base_url;
 
-        if (!assistantCodexEndpoint) {
-          cancelAndFailLoadingStage('Assistant Codex endpoint is not set');
+        if (!codexEndpoint) {
+          cancelAndFailLoadingStage('Codex endpoint is not set');
           return;
         }
 
@@ -264,7 +264,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
       stream: true,
     };
 
-    const completions_url = joinUrls(settings.api_base_url, OPENAI_API_COMPLETIONS_ENDPOINT);
+    const completions_url = joinUrls(settings.chat_api_base_url, OPENAI_API_COMPLETIONS_ENDPOINT);
     console.log(`completions url: ${completions_url}`);
     // console.log(updatedConversation.temperature);
     const response = await fetch(completions_url, {

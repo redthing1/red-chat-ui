@@ -90,29 +90,29 @@ export const SettingDialog: FC<Props> = ({ open, onClose }) => {
 
             {/* chat api base url */}
             <div className="text-sm font-bold mt-4 mb-2 text-black dark:text-neutral-200">
-              {t('Chat API Base URL')}
+              {t('Chat API')}
             </div>
 
             <input
               type="text"
               className="w-full p-2 border rounded-lg shadow border-neutral-500 text-neutral-900 dark:border-neutral-800 dark:border-opacity-50 dark:bg-neutral-700 dark:text-neutral-200"
-              value={state.api_base_url || ''}
+              value={state.chat_api_base_url || ''}
               onChange={(event) =>
-                dispatch({ field: 'api_base_url', value: event.target.value })
+                dispatch({ field: 'chat_api_base_url', value: event.target.value })
               }
             />
 
-            {/* assistant base url */}
+            {/* codex api base url */}
             <div className="text-sm font-bold mt-4 mb-2 text-black dark:text-neutral-200">
-              {t('Assistant Base URL')}
+              {t('Codex API')}
             </div>
 
             <input
               type="text"
               className="w-full p-2 border rounded-lg shadow border-neutral-500 text-neutral-900 dark:border-neutral-800 dark:border-opacity-50 dark:bg-neutral-700 dark:text-neutral-200"
-              value={state.assistant_base_url || ''}
+              value={state.codex_api_base_url || ''}
               onChange={(event) =>
-                dispatch({ field: 'assistant_base_url', value: event.target.value })
+                dispatch({ field: 'codex_api_base_url', value: event.target.value })
               }
             />
 
