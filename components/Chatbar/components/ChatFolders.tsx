@@ -36,7 +36,7 @@ export const ChatFolders = ({ searchTerm }: Props) => {
         .map((conversation, index) => {
           if (conversation.folderId === currentFolder.id) {
             return (
-              <div key={index} className="ml-5 gap-2 border-l pl-2">
+              <div key={index} className="ml-5 gap-2 border-l pl-2 dark:border-[#31312f]">
                 <ConversationComponent conversation={conversation} />
               </div>
             );
