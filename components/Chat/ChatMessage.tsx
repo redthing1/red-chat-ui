@@ -152,7 +152,7 @@ export const ChatMessage: FC<Props> = memo(({ message, messageIndex, onEdit }) =
                 <div className="flex w-full flex-col">
                   <textarea
                     ref={textareaRef}
-                    className="w-full resize-none whitespace-pre-wrap border-none dark:bg-[#1b1e1f]"
+                    className="w-full resize-none whitespace-pre-wrap border-none dark:bg-[#191918]"
                     value={messageContent}
                     onChange={handleInputChange}
                     onKeyDown={handlePressEnter}
