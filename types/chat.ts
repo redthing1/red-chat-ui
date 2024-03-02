@@ -1,10 +1,12 @@
 import { OpenAIModel } from './openai_models';
+import { PluginID } from './plugin';
 
 export interface Message {
   role: Role;
   foldContent?: string | null;
   displayContent: string;
   content: string;
+  pluginId?: PluginID;
 }
 
 export type Role = 'assistant' | 'user';

@@ -127,6 +127,10 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
     if (!selectedConversation) return;
     let updatedConversation: Conversation;
 
+    if (plugin) {
+      message.pluginId = plugin.id;
+    }
+
     if (deleteCount) {
       const updatedMessages = [...selectedConversation.messages];
       for (let i = 0; i < deleteCount; i++) {
