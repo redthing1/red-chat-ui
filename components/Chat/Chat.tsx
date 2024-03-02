@@ -279,7 +279,8 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           for (let i = 0; i < codexData.results.length; i++) {
             let result = codexData.results[i];
 
-            codexContextStr += `[Context #${i + 1}]: `;
+            // codexContextStr += `[Context #${i + 1}]: `;
+            codexContextStr += `[${i + 1}]: `;
             if (result.title) {
               codexContextStr += `${result.title}: `;
             }
@@ -289,7 +290,9 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
 
           console.log('added codex context:', codexContextStr);
 
-          enhancedMessageText = `${codexContextStr}\n\n${userMessage}`;
+          const codexContextInstructions = '[Instructions: The above are relevant excerpts from documents. You can use them to enhance your response to the query.]';
+
+          enhancedMessageText = `${codexContextStr}\n${codexContextInstructions}\n\n${userMessage}`;
         }
 
         // replace the user message with the enhanced message
