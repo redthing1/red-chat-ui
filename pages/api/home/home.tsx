@@ -40,6 +40,7 @@ import HomeContext from './home.context';
 import { HomeInitialState, initialState } from './home.state';
 
 import { v4 as uuidv4 } from 'uuid';
+import { APP_BRAND_NAME } from '@/utils/app/brand';
 
 interface Props {
   serverSideApiKeyIsSet: boolean;
@@ -357,7 +358,7 @@ const Home = ({
       }}
     >
       <Head>
-        <title>RedChat</title>
+        <title>{APP_BRAND_NAME}</title>
         <meta name="description" content="ChatGPT UI for local AI models." />
         <meta
           name="viewport"

@@ -37,6 +37,7 @@ import { TemperatureSlider } from './Temperature';
 import { MemoizedChatMessage } from './MemoizedChatMessage';
 import { OPENAI_API_COMPLETIONS_ENDPOINT } from '@/utils/app/const';
 import { OpenAIModel } from '@/types/openai_models';
+import { APP_BRAND_HERO } from '@/utils/app/brand';
 
 interface Props {
   stopConversationRef: MutableRefObject<boolean>;
@@ -718,7 +719,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
                         <Spinner size="16px" className="mx-auto" />
                       </div>
                     ) : (
-                      'RedChat AI'
+                      APP_BRAND_HERO
                     )}
                   </div>
 
