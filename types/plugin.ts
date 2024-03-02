@@ -1,4 +1,12 @@
 import { KeyValuePair } from './data';
+import {
+  IconBolt,
+  IconBrandGoogle,
+  IconBrandSafari,
+  IconFileText,
+  IconWorldSearch,
+  TablerIconsProps,
+} from '@tabler/icons-react';
 
 export interface Plugin {
   id: PluginID;
@@ -6,6 +14,7 @@ export interface Plugin {
   type: PluginType;
   enabled: boolean;
   requiredKeys?: KeyValuePair[];
+  icon: (props: TablerIconsProps) => JSX.Element;
 }
 
 export interface PluginKey {
@@ -41,24 +50,28 @@ export const Plugins: Record<PluginID, Plugin> = {
         value: '',
       },
     ],
+    icon: IconBrandGoogle,
   },
   [PluginID.WEB_BROWSER]: {
     id: PluginID.WEB_BROWSER,
     name: "Web Browser",
     type: PluginType.CUSTOM_ENDPOINT,
     enabled: false,
+    icon: IconBrandSafari,
   },
   [PluginID.CODEX_DOCS]: {
     id: PluginID.CODEX_DOCS,
     type: PluginType.PROMPT_ENHANCER,
     name: "Codex Docs",
     enabled: true,
+    icon: IconFileText,
   },
   [PluginID.CODEX_WEB]: {
     id: PluginID.CODEX_WEB,
     type: PluginType.PROMPT_ENHANCER,
     name: "Codex Web",
     enabled: true,
+    icon: IconWorldSearch,
   },
 };
 

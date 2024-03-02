@@ -287,23 +287,7 @@ export const ChatInput = ({
             onClick={() => setShowPluginSelect(!showPluginSelect)}
             onKeyDown={(e) => { }}
           >
-            {/* switch on plugin */}
-            {/* {plugin?.id === PluginID.GOOGLE_SEARCH ? (
-              <IconBrandGoogle size={20} />
-            ) : plugin?.id === PluginID.WEB_BROWSER ? (
-              <IconBrandSafari size={20} />
-            ) : (
-              <IconBolt size={20} />
-            )} */}
-            {plugin?.id === PluginID.WEB_BROWSER ? (
-              <IconBrandSafari size={20} />
-            ) : plugin?.id === PluginID.CODEX_DOCS ? (
-              <IconFileText size={20} />
-            ) : plugin?.id === PluginID.CODEX_WEB ? (
-              <IconWorldSearch size={20} />
-            ) : (
-              <IconBolt size={20} />
-            )}
+            {plugin?.icon ? <plugin.icon size={20} /> : <IconBolt size={20} />}
           </button>
 
           {showPluginSelect && (
