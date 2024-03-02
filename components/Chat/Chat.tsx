@@ -230,6 +230,9 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
         content: message.content,
       }
 
+      // get the message the user just submitted
+      let lastUserMessage = message.content;
+
       if (plugin.id == PluginID.CODEX_DOCS) {
         if (!settings.codexApiBaseUrl) {
           cancelAndFailLoadingStage('Codex endpoint is not set');
@@ -238,20 +241,8 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
 
         let codexEndpoint = joinUrls(settings.codexApiBaseUrl, '/v1/codex/query');
 
-        // get the message the user just submitted
-        let userMessage = message.content;
-
-        // // for now, a stub
-        // // delay for 1 second
-        // await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        // // reformat the message:
-        // let exampleContext = '[Context]: The moon is currently full due to server load, and cannot accomodate further players. This must be explained diplomatically.';
-
-        // let enhancedMessageText = `${exampleContext}\n\n${userMessage}`;
-
         const codexRequestData = {
-          queryTerm: userMessage,
+          queryTerm: lastUserMessage,
           minScore: 0.65,
           maxResults: 4,
           responseType: 'chunk',
@@ -273,7 +264,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
         const codexData = await codexResponse.json();
         console.log('codex response:', codexData);
 
-        let enhancedMessageText = userMessage;
+        let enhancedMessageText = lastUserMessage;
         if (codexData.results.length > 0) {
           let codexContextStr = '';
           for (let i = 0; i < codexData.results.length; i++) {
@@ -292,7 +283,74 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
 
           const codexContextInstructions = '[Instructions: The above are relevant excerpts from documents. You can use them to enhance your response to the query.]';
 
-          enhancedMessageText = `${codexContextStr}\n${codexContextInstructions}\n\n${userMessage}`;
+          enhancedMessageText = `${codexContextStr}\n${codexContextInstructions}\n\n${lastUserMessage}`;
+        }
+
+        // replace the user message with the enhanced message
+        updatedUserMessage = { role: 'user', content: enhancedMessageText };
+      }
+
+      if (plugin.id == PluginID.CODEX_WEB) {
+        if (!settings.codexApiBaseUrl) {
+          cancelAndFailLoadingStage('Codex endpoint is not set');
+          return;
+        }
+
+        let codexEndpoint = joinUrls(settings.codexApiBaseUrl, '/v1/codex/web');
+
+        const codexRequestData = {
+          queryTerm: lastUserMessage,
+          maxResults: 4,
+          responseType: 'chunk',
+          maxChunkSize: 480,
+        };
+        const codexResponse = await fetch(codexEndpoint, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          method: 'POST',
+          body: JSON.stringify(codexRequestData),
+        });
+        if (!codexResponse.ok) {
+          cancelAndFailLoadingStage('Failed to query codex');
+          console.error('Failed to query codex', codexResponse);
+          return;
+        }
+
+        const codexData = await codexResponse.json();
+        console.log('codex response:', codexData);
+
+        let enhancedMessageText = lastUserMessage;
+        if (codexData.results.length > 0) {
+          let codexContextStr = '';
+
+          // add main search results
+          for (let i = 0; i < codexData.results.length; i++) {
+            let result = codexData.results[i];
+
+            codexContextStr += `[Web Result ${i + 1}]: `;
+            if (result.title) {
+              codexContextStr += `${result.title}: `;
+            }
+            codexContextStr += `${result.content}`;
+            codexContextStr += '\n';
+          }
+
+          // add entity search results
+          for (let entityName in codexData.entities) {
+            let entityInfo = codexData.entities[entityName];
+
+            codexContextStr += `[${entityName}]: `;
+            if (entityInfo.content) {
+              codexContextStr += `${entityInfo.content}`;
+            }
+          }
+
+          console.log('added codex context:', codexContextStr);
+
+          const codexContextInstructions = '[Instructions: The above are relevant web search results, and referenced entities. You should use them to enhance your response to the query.]';
+
+          enhancedMessageText = `${codexContextStr}\n${codexContextInstructions}\n\n${lastUserMessage}`;
         }
 
         // replace the user message with the enhanced message
