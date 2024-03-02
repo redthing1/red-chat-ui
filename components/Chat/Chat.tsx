@@ -252,10 +252,10 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
 
         const codexRequestData = {
           queryTerm: userMessage,
-          minScore: 0.3,
+          minScore: 0.65,
           maxResults: 4,
           responseType: 'chunk',
-          maxChunkSize: 240,
+          maxChunkSize: 480,
         };
         const codexResponse = await fetch(codexEndpoint, {
           headers: {
@@ -279,7 +279,12 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           for (let i = 0; i < codexData.results.length; i++) {
             let result = codexData.results[i];
 
-            codexContextStr += `[Context #${i + 1}]: ${result.title}: ${result.content}\n`;
+            codexContextStr += `[Context #${i + 1}]: `;
+            if (result.title) {
+              codexContextStr += `${result.title}: `;
+            }
+            codexContextStr += `${result.content}`;
+            codexContextStr += '\n';
           }
 
           console.log('added codex context:', codexContextStr);
@@ -369,7 +374,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
       // set conversation name to be the beginning of the user's request
       const { content } = message;
       const customName =
-      content.length > 30 ? content.substring(0, 30) + '...' : content;
+        content.length > 30 ? content.substring(0, 30) + '...' : content;
       console.log('is fresh conversation, setting name:', customName);
       updatedConversation = {
         ...updatedConversation,
