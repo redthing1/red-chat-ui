@@ -17,6 +17,7 @@ export enum PluginID {
   GOOGLE_SEARCH = 'google-search',
   WEB_BROWSER = 'web-browser',
   CODEX_DOCS = 'codex-docs',
+  CODEX_WEB = 'codex-web',
 }
 
 export enum PluginType {
@@ -51,6 +52,12 @@ export const Plugins: Record<PluginID, Plugin> = {
     id: PluginID.CODEX_DOCS,
     type: PluginType.PROMPT_ENHANCER,
     name: "Codex Docs",
+    enabled: true,
+  },
+  [PluginID.CODEX_WEB]: {
+    id: PluginID.CODEX_WEB,
+    type: PluginType.PROMPT_ENHANCER,
+    name: "Codex Web",
     enabled: true,
   },
 };

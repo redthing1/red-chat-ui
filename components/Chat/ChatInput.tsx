@@ -4,6 +4,7 @@ import {
   IconBrandGoogle,
   IconBrandSafari,
   IconFileText,
+  IconWorldSearch,
   IconPlayerStop,
   IconRepeat,
   IconSend,
@@ -299,6 +300,8 @@ export const ChatInput = ({
               <IconBrandSafari size={20} />
             ) : plugin?.id === PluginID.CODEX_DOCS ? (
               <IconFileText size={20} />
+            ) : plugin?.id === PluginID.CODEX_WEB ? (
+              <IconWorldSearch size={20} />
             ) : (
               <IconBolt size={20} />
             )}
