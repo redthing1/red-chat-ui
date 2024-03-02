@@ -100,7 +100,7 @@ export const ChatInput = ({
       return;
     }
 
-    onSend({ role: 'user', content }, plugin);
+    onSend({ role: 'user', content: content, displayContent: content }, plugin);
     setContent('');
     setPlugin(null);
 
@@ -236,9 +236,8 @@ export const ChatInput = ({
     if (textareaRef && textareaRef.current) {
       textareaRef.current.style.height = 'inherit';
       textareaRef.current.style.height = `${textareaRef.current?.scrollHeight}px`;
-      textareaRef.current.style.overflow = `${
-        textareaRef?.current?.scrollHeight > 400 ? 'auto' : 'hidden'
-      }`;
+      textareaRef.current.style.overflow = `${textareaRef?.current?.scrollHeight > 400 ? 'auto' : 'hidden'
+        }`;
     }
   }, [content]);
 
@@ -286,7 +285,7 @@ export const ChatInput = ({
           <button
             className="absolute left-2 top-2 rounded-sm p-1 text-neutral-800 opacity-60 hover:bg-neutral-200 hover:text-neutral-900 dark:bg-opacity-50 dark:text-neutral-100 dark:hover:text-neutral-200"
             onClick={() => setShowPluginSelect(!showPluginSelect)}
-            onKeyDown={(e) => {}}
+            onKeyDown={(e) => { }}
           >
             {/* switch on plugin */}
             {/* {plugin?.id === PluginID.GOOGLE_SEARCH ? (
@@ -337,11 +336,10 @@ export const ChatInput = ({
               resize: 'none',
               bottom: `${textareaRef?.current?.scrollHeight}px`,
               maxHeight: '400px',
-              overflow: `${
-                textareaRef.current && textareaRef.current.scrollHeight > 400
-                  ? 'auto'
-                  : 'hidden'
-              }`,
+              overflow: `${textareaRef.current && textareaRef.current.scrollHeight > 400
+                ? 'auto'
+                : 'hidden'
+                }`,
             }}
             placeholder={
               t('Type a message...') || ''

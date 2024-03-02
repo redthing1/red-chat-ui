@@ -16,7 +16,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       req.body as GoogleBody;
 
     const userMessage = messages[messages.length - 1];
-    const query = encodeURIComponent(userMessage.content.trim());
+    const query = encodeURIComponent(userMessage.displayContent.trim());
 
     const googleRes = await fetch(
       `https://customsearch.googleapis.com/customsearch/v1?key=${
@@ -97,7 +97,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     It's 70 degrees and sunny in San Francisco today. [[1]](https://www.google.com/search?q=weather+san+francisco)
 
     Input:
-    ${userMessage.content.trim()}
+    ${userMessage.displayContent.trim()}
 
     Sources:
     ${filteredSources.map((source) => {
@@ -110,7 +110,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     Response:
     `;
 
-    const answerMessage: Message = { role: 'user', content: answerPrompt };
+    const answerMessage: Message = { role: 'user', displayContent: answerPrompt };
 
     const answerRes = await fetch(`${OPENAI_API_HOST}/v1/chat/completions`, {
       headers: {

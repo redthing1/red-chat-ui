@@ -42,7 +42,7 @@ export const ChatMessage: FC<Props> = memo(({ message, messageIndex, onEdit }) =
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isTyping, setIsTyping] = useState<boolean>(false);
-  const [messageContent, setMessageContent] = useState(message.content);
+  const [messageContent, setMessageContent] = useState(message.displayContent);
   const [messagedCopied, setMessageCopied] = useState(false);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -60,9 +60,9 @@ export const ChatMessage: FC<Props> = memo(({ message, messageIndex, onEdit }) =
   };
 
   const handleEditMessage = () => {
-    if (message.content != messageContent) {
+    if (message.displayContent != messageContent) {
       if (selectedConversation && onEdit) {
-        onEdit({ ...message, content: messageContent });
+        onEdit({ ...message, displayContent: messageContent });
       }
     }
     setIsEditing(false);
@@ -107,7 +107,7 @@ export const ChatMessage: FC<Props> = memo(({ message, messageIndex, onEdit }) =
   const copyOnClick = () => {
     if (!navigator.clipboard) return;
 
-    navigator.clipboard.writeText(message.content).then(() => {
+    navigator.clipboard.writeText(message.displayContent).then(() => {
       setMessageCopied(true);
       setTimeout(() => {
         setMessageCopied(false);
@@ -116,8 +116,8 @@ export const ChatMessage: FC<Props> = memo(({ message, messageIndex, onEdit }) =
   };
 
   useEffect(() => {
-    setMessageContent(message.content);
-  }, [message.content]);
+    setMessageContent(message.displayContent);
+  }, [message.displayContent]);
 
 
   useEffect(() => {
@@ -179,7 +179,7 @@ export const ChatMessage: FC<Props> = memo(({ message, messageIndex, onEdit }) =
                     <button
                       className="h-[40px] rounded-md border border-neutral-300 px-4 py-1 text-sm font-medium text-neutral-700 hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
                       onClick={() => {
-                        setMessageContent(message.content);
+                        setMessageContent(message.displayContent);
                         setIsEditing(false);
                       }}
                     >
@@ -189,7 +189,7 @@ export const ChatMessage: FC<Props> = memo(({ message, messageIndex, onEdit }) =
                 </div>
               ) : (
                 <div className="prose whitespace-pre-wrap dark:prose-invert flex-1">
-                  {message.content}
+                  {message.displayContent}
                 </div>
               )}
 
@@ -264,7 +264,7 @@ export const ChatMessage: FC<Props> = memo(({ message, messageIndex, onEdit }) =
                   },
                 }}
               >
-                {`${message.content}${
+                {`${message.displayContent}${
                   messageIsStreaming && messageIndex == (selectedConversation?.messages.length ?? 0) - 1 ? '`▍`' : ''
                 }`}
               </MemoizedReactMarkdown>

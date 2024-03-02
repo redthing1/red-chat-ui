@@ -73,11 +73,11 @@ describe('cleanData Functions', () => {
           messages: [
             {
               role: 'user',
-              content: "what's up ?",
+              displayContent: "what's up ?",
             },
             {
               role: 'assistant',
-              content: 'Hi',
+              displayContent: 'Hi',
             },
           ],
         },
@@ -122,11 +122,11 @@ describe('cleanData Functions', () => {
             messages: [
               {
                 role: 'user',
-                content: "what's up ?",
+                displayContent: "what's up ?",
               },
               {
                 role: 'assistant',
-                content: 'Hi',
+                displayContent: 'Hi',
               },
             ],
           },
@@ -185,11 +185,11 @@ describe('cleanData Functions', () => {
             messages: [
               {
                 role: 'user',
-                content: "what's up ?",
+                displayContent: "what's up ?",
               },
               {
                 role: 'assistant',
-                content: 'Hi',
+                displayContent: 'Hi',
               },
             ],
             model: OpenAIModels[OpenAIModelID.GPT_3_5],

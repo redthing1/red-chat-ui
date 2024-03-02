@@ -27,9 +27,9 @@ function concatenatePrompts(sys_prompt: string, prefix_prompt: string, post_prom
   let result = sys_prompt;
   for (let i = 0; i < messages.length; i++) {
     if (i % 2 === 1) { // Skip even indexed messages
-      result += `${messages[i].content}`;
+      result += `${messages[i].displayContent}`;
     } else {
-      result += `${prefix_prompt}${messages[i].content}${post_prompt}`;
+      result += `${prefix_prompt}${messages[i].displayContent}${post_prompt}`;
     }
   }
   return result;

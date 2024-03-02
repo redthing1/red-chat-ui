@@ -226,12 +226,13 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
 
       // store the updated user message
       let updatedUserMessage: Message = {
-        role: 'user',
+        ...message,
         content: message.content,
+        displayContent: message.displayContent,
       }
 
       // get the message the user just submitted
-      let lastUserMessage = message.content;
+      let userMessageText = message.content;
 
       if (plugin.id == PluginID.CODEX_DOCS) {
         if (!settings.codexApiBaseUrl) {
@@ -242,7 +243,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
         let codexEndpoint = joinUrls(settings.codexApiBaseUrl, '/v1/codex/query');
 
         const codexRequestData = {
-          queryTerm: lastUserMessage,
+          queryTerm: userMessageText,
           minScore: 0.65,
           maxResults: 4,
           responseType: 'chunk',
@@ -264,7 +265,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
         const codexData = await codexResponse.json();
         console.log('codex response:', codexData);
 
-        let enhancedMessageText = lastUserMessage;
+        let enhancedMessageText = userMessageText;
         if (codexData.results.length > 0) {
           let codexContextStr = '';
           for (let i = 0; i < codexData.results.length; i++) {
@@ -283,11 +284,12 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
 
           const codexContextInstructions = '[Instructions: The above are relevant excerpts from documents. You can use them to enhance your response to the query.]';
 
-          enhancedMessageText = `${codexContextStr}\n${codexContextInstructions}\n\n${lastUserMessage}`;
+          const codexContextFull = `${codexContextStr}\n${codexContextInstructions}\n`;
+          enhancedMessageText = `${codexContextFull}\n${userMessageText}`;
+          updatedUserMessage.foldContent = codexContextFull;
+          updatedUserMessage.displayContent = userMessageText;
+          updatedUserMessage.content = enhancedMessageText;
         }
-
-        // replace the user message with the enhanced message
-        updatedUserMessage = { role: 'user', content: enhancedMessageText };
       }
 
       if (plugin.id == PluginID.CODEX_WEB) {
@@ -299,7 +301,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
         let codexEndpoint = joinUrls(settings.codexApiBaseUrl, '/v1/codex/web');
 
         const codexRequestData = {
-          queryTerm: lastUserMessage,
+          queryTerm: userMessageText,
           maxResults: 4,
           responseType: 'chunk',
           maxChunkSize: 480,
@@ -320,7 +322,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
         const codexData = await codexResponse.json();
         console.log('codex response:', codexData);
 
-        let enhancedMessageText = lastUserMessage;
+        let enhancedMessageText = userMessageText;
         if (codexData.results.length > 0) {
           let codexContextStr = '';
 
@@ -350,11 +352,12 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
 
           const codexContextInstructions = '[Instructions: The above are relevant web search results, and referenced entities. You should use them to enhance your response to the query.]';
 
-          enhancedMessageText = `${codexContextStr}\n${codexContextInstructions}\n\n${lastUserMessage}`;
+          const codexContextFull = `${codexContextStr}\n${codexContextInstructions}\n`;
+          enhancedMessageText = `${codexContextFull}\n${userMessageText}`;
+          updatedUserMessage.foldContent = codexContextFull;
+          updatedUserMessage.displayContent = userMessageText;
+          updatedUserMessage.content = enhancedMessageText;
         }
-
-        // replace the user message with the enhanced message
-        updatedUserMessage = { role: 'user', content: enhancedMessageText };
       }
 
       updatedConversation.messages.pop();
@@ -433,9 +436,9 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
     // if this is the first message, update the conversation name
     if (isFreshConversation) {
       // set conversation name to be the beginning of the user's request
-      const { content } = message;
+      const { displayContent: messageVisibleContent } = message;
       const customName =
-        content.length > 30 ? content.substring(0, 30) + '...' : content;
+        messageVisibleContent.length > 30 ? messageVisibleContent.substring(0, 30) + '...' : messageVisibleContent;
       console.log('is fresh conversation, setting name:', customName);
       updatedConversation = {
         ...updatedConversation,
@@ -484,7 +487,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
         // add a new message with the assistant role
         const updatedMessages: Message[] = [
           ...updatedConversation.messages,
-          { role: 'assistant', content: chunkValue },
+          { role: 'assistant', displayContent: chunkValue, content: chunkValue },
         ];
         updatedConversation = {
           ...updatedConversation,
@@ -521,6 +524,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
               return {
                 ...message,
                 content: textSoFar,
+                displayContent: textSoFar,
               };
             }
             return message;
@@ -543,7 +547,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
 
       let messagesForSummarize: Message[] = [
         ...updatedConversation.messages,
-        { role: 'user', content: summarizeExchangePrompt }
+        { role: 'user', content: summarizeExchangePrompt, displayContent: summarizeExchangePrompt }
       ];
 
       const completionRequestData = {

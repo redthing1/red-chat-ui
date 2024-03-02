@@ -2,6 +2,8 @@ import { OpenAIModel } from './openai_models';
 
 export interface Message {
   role: Role;
+  foldContent?: string | null;
+  displayContent: string;
   content: string;
 }
 
