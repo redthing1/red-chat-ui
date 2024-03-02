@@ -149,7 +149,6 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
     });
 
     const isFreshConversation = updatedConversation.messages.length === 1;
-    // console.log('is fresh conversation:', isFreshConversation);
 
     homeDispatch({ field: 'loading', value: true });
     const controller = new AbortController();
@@ -369,7 +368,8 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
       // set conversation name to be the beginning of the user's request
       const { content } = message;
       const customName =
-        content.length > 30 ? content.substring(0, 30) + '...' : content;
+      content.length > 30 ? content.substring(0, 30) + '...' : content;
+      console.log('is fresh conversation, setting name:', customName);
       updatedConversation = {
         ...updatedConversation,
         name: customName,
@@ -525,6 +525,10 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
         ...updatedConversation,
         name: customName,
       };
+      homeDispatch({
+        field: 'selectedConversation',
+        value: updatedConversation,
+      });
     }
 
     // save the conversation
