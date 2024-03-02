@@ -230,25 +230,62 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
         content: message.content,
       }
 
-      if (plugin.id == PluginID.ASSISTANT_DOCS) {
-        let codexEndpoint = settings.codexApiBaseUrl;
-
-        if (!codexEndpoint) {
+      if (plugin.id == PluginID.CODEX_DOCS) {
+        if (!settings.codexApiBaseUrl) {
           cancelAndFailLoadingStage('Codex endpoint is not set');
           return;
         }
 
+        let codexEndpoint = joinUrls(settings.codexApiBaseUrl, '/v1/codex/query');
+
         // get the message the user just submitted
         let userMessage = message.content;
 
-        // for now, a stub
-        // delay for 1 second
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        // // for now, a stub
+        // // delay for 1 second
+        // await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        // reformat the message:
-        let exampleContext = '[Context]: The moon is currently full due to server load, and cannot accomodate further players. This must be explained diplomatically.';
+        // // reformat the message:
+        // let exampleContext = '[Context]: The moon is currently full due to server load, and cannot accomodate further players. This must be explained diplomatically.';
 
-        let enhancedMessageText = `${exampleContext}\n\n${userMessage}`;
+        // let enhancedMessageText = `${exampleContext}\n\n${userMessage}`;
+
+        const codexRequestData = {
+          queryTerm: userMessage,
+          minScore: 0.3,
+          maxResults: 4,
+          responseType: 'chunk',
+          maxChunkSize: 240,
+        };
+        const codexResponse = await fetch(codexEndpoint, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          method: 'POST',
+          body: JSON.stringify(codexRequestData),
+        });
+        if (!codexResponse.ok) {
+          cancelAndFailLoadingStage('Failed to query codex');
+          console.error('Failed to query codex', codexResponse);
+          return;
+        }
+
+        const codexData = await codexResponse.json();
+        console.log('codex response:', codexData);
+
+        let enhancedMessageText = userMessage;
+        if (codexData.results.length > 0) {
+          let codexContextStr = '';
+          for (let i = 0; i < codexData.results.length; i++) {
+            let result = codexData.results[i];
+
+            codexContextStr += `[Context #${i + 1}]: ${result.title}: ${result.content}\n`;
+          }
+
+          console.log('added codex context:', codexContextStr);
+
+          enhancedMessageText = `${codexContextStr}\n\n${userMessage}`;
+        }
 
         // replace the user message with the enhanced message
         updatedUserMessage = { role: 'user', content: enhancedMessageText };

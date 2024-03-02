@@ -297,7 +297,7 @@ export const ChatInput = ({
             )} */}
             {plugin?.id === PluginID.WEB_BROWSER ? (
               <IconBrandSafari size={20} />
-            ) : plugin?.id === PluginID.ASSISTANT_DOCS ? (
+            ) : plugin?.id === PluginID.CODEX_DOCS ? (
               <IconFileText size={20} />
             ) : (
               <IconBolt size={20} />

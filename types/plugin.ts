@@ -16,7 +16,7 @@ export interface PluginKey {
 export enum PluginID {
   GOOGLE_SEARCH = 'google-search',
   WEB_BROWSER = 'web-browser',
-  ASSISTANT_DOCS = 'assistant-docs',
+  CODEX_DOCS = 'codex-docs',
 }
 
 export enum PluginType {
@@ -47,10 +47,10 @@ export const Plugins: Record<PluginID, Plugin> = {
     type: PluginType.CUSTOM_ENDPOINT,
     enabled: false,
   },
-  [PluginID.ASSISTANT_DOCS]: {
-    id: PluginID.ASSISTANT_DOCS,
+  [PluginID.CODEX_DOCS]: {
+    id: PluginID.CODEX_DOCS,
     type: PluginType.PROMPT_ENHANCER,
-    name: "Assistant Docs",
+    name: "Codex Docs",
     enabled: true,
   },
 };
