@@ -25,6 +25,7 @@ import { MemoizedReactMarkdown } from '../Markdown/MemoizedReactMarkdown';
 import rehypeMathjax from 'rehype-mathjax';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
+import { Plugins } from '@/types/plugin';
 
 export interface Props {
   message: Message;
@@ -127,13 +128,14 @@ export const ChatMessage: FC<Props> = memo(({ message, messageIndex, onEdit }) =
     }
   }, [isEditing]);
 
+  const messagePlugin = message.pluginId ? Plugins[message.pluginId] : null;
+
   return (
     <div
-      className={`group md:px-4 ${APP_CHAT_FONT.className} ${
-        message.role === 'assistant'
+      className={`group md:px-4 ${APP_CHAT_FONT.className} ${message.role === 'assistant'
           ? 'border-b border-black/10 bg-gray-50 text-gray-800 dark:border-gray-850/50 dark:bg-[#191918] dark:text-gray-100'
           : 'border-b border-black/10 bg-white text-gray-800 dark:border-gray-850/50 dark:bg-[#191918] dark:text-gray-100'
-      }`}
+        }`}
       style={{ overflowWrap: 'anywhere' }}
     >
       <div className="relative m-auto flex p-4 text-base md:max-w-2xl md:gap-6 md:py-4 lg:max-w-2xl lg:px-0 xl:max-w-3xl">
@@ -141,7 +143,13 @@ export const ChatMessage: FC<Props> = memo(({ message, messageIndex, onEdit }) =
           {message.role === 'assistant' ? (
             <IconBrandOpenai size={28} />
           ) : (
-            <IconCursorText size={28} />
+            messagePlugin ? (
+              // if a plugin was used, display the plugin icon
+              <messagePlugin.icon size={28} />
+            ) : (
+              // default to user icon
+              <IconCursorText size={28} />
+            )
           )}
         </div>
 
@@ -264,9 +272,8 @@ export const ChatMessage: FC<Props> = memo(({ message, messageIndex, onEdit }) =
                   },
                 }}
               >
-                {`${message.displayContent}${
-                  messageIsStreaming && messageIndex == (selectedConversation?.messages.length ?? 0) - 1 ? '`▍`' : ''
-                }`}
+                {`${message.displayContent}${messageIsStreaming && messageIndex == (selectedConversation?.messages.length ?? 0) - 1 ? '`▍`' : ''
+                  }`}
               </MemoizedReactMarkdown>
 
               <div className="md:-mr-8 ml-1 md:ml-0 flex flex-col md:flex-row gap-4 md:gap-1 items-center md:items-start justify-end md:justify-start">
