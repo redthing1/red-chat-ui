@@ -45,7 +45,7 @@ export const ChatMessage: FC<Props> = memo(({ message, messageIndex, onEdit }) =
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isTyping, setIsTyping] = useState<boolean>(false);
-  const [isFoldedContentVisible, setHiddenContextIsFolded] = useState<boolean>(true);
+  const [isFoldedContentVisible, setIsFoldedContentVisible] = useState<boolean>(false);
   const [messageContent, setMessageContent] = useState(message.displayContent);
   const [messagedCopied, setMessageCopied] = useState(false);
 
@@ -201,28 +201,28 @@ export const ChatMessage: FC<Props> = memo(({ message, messageIndex, onEdit }) =
               ) : (
                 <div className="prose whitespace-pre-wrap dark:prose-invert flex-1">
                   {message.foldedContent ? (
-                    <button
-                      className={`flex cursor-pointer items-center rounded-lg py-3 pr-2 text-sm transition-colors duration-200 hover:bg-[#343541]/90`}
-                      onClick={() => setHiddenContextIsFolded(!isFoldedContentVisible)}
-                    >
+                    <div className="rounded-lg transition-colors duration-200 hover:bg-[#343541]/90">
+                      <button
+                        className={`flex cursor-pointer items-center py-3 text-sm`}
+                        onClick={() => setIsFoldedContentVisible(!isFoldedContentVisible)}
+                      >
+                        {!isFoldedContentVisible ? (
+                          <IconCaretRight size={18} />
+                        ) : (
+                          <IconCaretDown size={18} />
+                        )}
+                        <div className="relative max-h-5 flex-1 text-ellipsis whitespace-nowrap break-all text-left text-[12.5px] leading-3">
+                          Context
+                        </div>
+                      </button>
                       {isFoldedContentVisible ? (
-                        <IconCaretRight size={18} />
-                      ) : (
-                        <IconCaretDown size={18} />
-                      )}
-                      <div className="relative max-h-5 flex-1 text-ellipsis whitespace-nowrap break-all text-left text-[12.5px] leading-3">
-                        Context
-                      </div>
-                    </button>
-                  ) : null}
-
-                  {/* if folded content is visible, show in a code block */}
-                  {message.foldedContent && !isFoldedContentVisible ? (
-                    <div className="pl-0">
-                      <CodeBlock
-                        language="plaintext"
-                        value={message.foldedContent}
-                      />
+                        <div className="pl-0 py-3 pr-2">
+                          <CodeBlock
+                            language="plaintext"
+                            value={message.foldedContent}
+                          />
+                        </div>
+                      ) : null}
                     </div>
                   ) : null}
 
