@@ -59,7 +59,16 @@ export const ChatMessage: FC<Props> = memo(({ message, messageIndex, onEdit }) =
     setMessageContent(event.target.value);
     if (textareaRef.current) {
       textareaRef.current.style.height = 'inherit';
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+      // textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+      // cap to maximum height, make scrollbar visible
+      let maxTextareaHeight = 400;
+      if (textareaRef.current.scrollHeight > maxTextareaHeight) {
+        textareaRef.current.style.height = `${maxTextareaHeight}px`;
+        textareaRef.current.style.overflowY = 'scroll';
+      } else {
+        textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+        textareaRef.current.style.overflowY = 'hidden';
+      }
     }
   };
 
