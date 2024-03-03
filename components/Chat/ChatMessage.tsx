@@ -203,7 +203,7 @@ export const ChatMessage: FC<Props> = memo(({ message, messageIndex, onEdit }) =
                   {message.foldedContent ? (
                     <div className="rounded-lg transition-colors duration-200 hover:bg-[#343541]/90">
                       <button
-                        className={`flex cursor-pointer items-center py-3 text-sm`}
+                        className={`flex w-full cursor-pointer items-center py-3 text-sm`}
                         onClick={() => setIsFoldedContentVisible(!isFoldedContentVisible)}
                       >
                         {!isFoldedContentVisible ? (
