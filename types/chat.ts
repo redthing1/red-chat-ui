@@ -6,7 +6,7 @@ export interface Message {
   foldedContent?: string | null;
   displayContent: string;
   content: string;
-  pluginId?: PluginID;
+  pluginId?: PluginID | null;
 }
 
 export type Role = 'assistant' | 'user';

@@ -46,7 +46,7 @@ export const ChatMessage: FC<Props> = memo(({ message, messageIndex, onEdit }) =
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const [isFoldedContentVisible, setIsFoldedContentVisible] = useState<boolean>(false);
-  const [messageContent, setMessageContent] = useState(message.displayContent);
+  const [messageContent, setMessageContent] = useState(message.content);
   const [messagedCopied, setMessageCopied] = useState(false);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -64,9 +64,21 @@ export const ChatMessage: FC<Props> = memo(({ message, messageIndex, onEdit }) =
   };
 
   const handleEditMessage = () => {
-    if (message.displayContent != messageContent) {
+    if (message.content != messageContent) {
       if (selectedConversation && onEdit) {
-        onEdit({ ...message, displayContent: messageContent });
+        let newMessage = { ...message };
+
+        newMessage.content = messageContent;
+
+        // if there was folded content, remove it
+        newMessage.displayContent = newMessage.content;
+        newMessage.foldedContent = null;
+        // also remove the plugin
+        if (newMessage.pluginId) {
+          newMessage.pluginId = null;
+        }
+        console.log('newMessage', newMessage);
+        onEdit({ ...newMessage });
       }
     }
     setIsEditing(false);
@@ -120,8 +132,8 @@ export const ChatMessage: FC<Props> = memo(({ message, messageIndex, onEdit }) =
   };
 
   useEffect(() => {
-    setMessageContent(message.displayContent);
-  }, [message.displayContent]);
+    setMessageContent(message.content);
+  }, [message.content]);
 
 
   useEffect(() => {
@@ -190,7 +202,7 @@ export const ChatMessage: FC<Props> = memo(({ message, messageIndex, onEdit }) =
                     <button
                       className="h-[40px] rounded-md border border-neutral-300 px-4 py-1 text-sm font-medium text-neutral-700 hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
                       onClick={() => {
-                        setMessageContent(message.displayContent);
+                        setMessageContent(message.content);
                         setIsEditing(false);
                       }}
                     >
