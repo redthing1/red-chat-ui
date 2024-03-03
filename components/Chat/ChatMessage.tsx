@@ -5,6 +5,8 @@ import {
   IconRobot,
   IconTrash,
   IconUser,
+  IconCaretRight,
+  IconCaretDown,
   IconCursorText,
   IconBrandOpenai,
 } from '@tabler/icons-react';
@@ -43,6 +45,7 @@ export const ChatMessage: FC<Props> = memo(({ message, messageIndex, onEdit }) =
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isTyping, setIsTyping] = useState<boolean>(false);
+  const [isFoldedContentVisible, setHiddenContextIsFolded] = useState<boolean>(true);
   const [messageContent, setMessageContent] = useState(message.displayContent);
   const [messagedCopied, setMessageCopied] = useState(false);
 
@@ -133,8 +136,8 @@ export const ChatMessage: FC<Props> = memo(({ message, messageIndex, onEdit }) =
   return (
     <div
       className={`group md:px-4 ${APP_CHAT_FONT.className} ${message.role === 'assistant'
-          ? 'border-b border-black/10 bg-gray-50 text-gray-800 dark:border-gray-850/50 dark:bg-[#191918] dark:text-gray-100'
-          : 'border-b border-black/10 bg-white text-gray-800 dark:border-gray-850/50 dark:bg-[#191918] dark:text-gray-100'
+        ? 'border-b border-black/10 bg-gray-50 text-gray-800 dark:border-gray-850/50 dark:bg-[#191918] dark:text-gray-100'
+        : 'border-b border-black/10 bg-white text-gray-800 dark:border-gray-850/50 dark:bg-[#191918] dark:text-gray-100'
         }`}
       style={{ overflowWrap: 'anywhere' }}
     >
@@ -197,6 +200,32 @@ export const ChatMessage: FC<Props> = memo(({ message, messageIndex, onEdit }) =
                 </div>
               ) : (
                 <div className="prose whitespace-pre-wrap dark:prose-invert flex-1">
+                  {message.foldedContent ? (
+                    <button
+                      className={`flex cursor-pointer items-center rounded-lg py-3 pr-2 text-sm transition-colors duration-200 hover:bg-[#343541]/90`}
+                      onClick={() => setHiddenContextIsFolded(!isFoldedContentVisible)}
+                    >
+                      {isFoldedContentVisible ? (
+                        <IconCaretRight size={18} />
+                      ) : (
+                        <IconCaretDown size={18} />
+                      )}
+                      <div className="relative max-h-5 flex-1 text-ellipsis whitespace-nowrap break-all text-left text-[12.5px] leading-3">
+                        Context
+                      </div>
+                    </button>
+                  ) : null}
+
+                  {/* if folded content is visible, show in a code block */}
+                  {message.foldedContent && !isFoldedContentVisible ? (
+                    <div className="pl-0">
+                      <CodeBlock
+                        language="plaintext"
+                        value={message.foldedContent}
+                      />
+                    </div>
+                  ) : null}
+
                   {message.displayContent}
                 </div>
               )}

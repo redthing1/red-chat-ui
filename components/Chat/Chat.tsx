@@ -290,7 +290,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
 
           const codexContextFull = `${codexContextStr}\n${codexContextInstructions}\n`;
           enhancedMessageText = `${codexContextFull}\n${userMessageText}`;
-          updatedUserMessage.foldContent = codexContextFull;
+          updatedUserMessage.foldedContent = codexContextFull;
           updatedUserMessage.displayContent = userMessageText;
           updatedUserMessage.content = enhancedMessageText;
         }
@@ -358,7 +358,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
 
           const codexContextFull = `${codexContextStr}\n${codexContextInstructions}\n`;
           enhancedMessageText = `${codexContextFull}\n${userMessageText}`;
-          updatedUserMessage.foldContent = codexContextFull;
+          updatedUserMessage.foldedContent = codexContextFull;
           updatedUserMessage.displayContent = userMessageText;
           updatedUserMessage.content = enhancedMessageText;
         }

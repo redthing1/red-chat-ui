@@ -3,7 +3,7 @@ import { PluginID } from './plugin';
 
 export interface Message {
   role: Role;
-  foldContent?: string | null;
+  foldedContent?: string | null;
   displayContent: string;
   content: string;
   pluginId?: PluginID;
