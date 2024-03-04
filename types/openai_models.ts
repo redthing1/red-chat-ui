@@ -21,6 +21,7 @@ export enum OpenAIModelID {
   Solar = 'Solar',
   NousHermes = 'Nous-Hermes',
   Zephyr = 'Zephyr',
+  Miqu = 'Miqu',
   Senku = 'Senku',
 }
 
@@ -97,6 +98,19 @@ export const OpenAIModels: Record<OpenAIModelID, OpenAIModel> = {
     userPrefixPrompt: '<|user|>\n',
     userSuffixPrompt: '</s>\n',
     assistantPrefixPrompt: '<|assistant|>\n',
+    maxLength: 10000000,
+    tokenLimit: 10000000,
+  },
+  [OpenAIModelID.Miqu]: {
+    // https://old.reddit.com/r/LocalLLaMA/comments/1b1gxmq/the_definite_correct_miqu_prompt/
+    // [INST] {System}[/INST][INST] {User}[/INST] {Assistant}
+    id: OpenAIModelID.Miqu,
+    name: 'Miqu',
+    sysPrompt: '[INST] You are Miqu, a helpful and intelligent AI assistant.[/INST]',
+    userPrefixPrompt: '[INST]',
+    userSuffixPrompt: ' [/INST] ',
+    assistantPrefixPrompt: '',
+    assistantSuffixPrompt: '\n',
     maxLength: 10000000,
     tokenLimit: 10000000,
   },
