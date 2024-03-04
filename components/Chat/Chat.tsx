@@ -58,19 +58,25 @@ interface Props {
 // }
 
 function createPromptFromMessages(model: OpenAIModel, messages: Message[]) {
-  let system = model.sysPrompt;
+  let systemPrompt = model.sysPrompt;
+  
+  // if the model supports personality, apply it to the system prompt
+  const settings = getSettings();
+  if (settings.enableCustomPersonality && settings.customPersonality && settings.customPersonality.trim() !== '') {
+    // custom personality
+    systemPrompt = systemPrompt.replace('$PERSONALITY', settings.customPersonality);
+  } else if (model.defaultPersonality) {
+    // default personality
+    systemPrompt = systemPrompt.replace('$PERSONALITY', model.defaultPersonality);
+  }
+
   let userPrefix = model.userPrefixPrompt;
   let userSuffix = model.userSuffixPrompt;
   let assistantPrefix = model.assistantPrefixPrompt ?? '';
   let assistantSuffix = model.assistantSuffixPrompt ?? '';
-  // console.log('model:', model);
-  // console.log('user prefix:', userPrefix);
-  // console.log('user suffix:', userSuffix);
-  // console.log('assistant prefix:', assistantPrefix);
-  // console.log('assistant suffix:', assistantSuffix);
 
   // system prompt
-  let chatLog = model.sysPrompt;
+  let chatLog = systemPrompt;
 
   for (let i = 0; i < messages.length; i++) {
     if (messages[i].role === 'assistant') {

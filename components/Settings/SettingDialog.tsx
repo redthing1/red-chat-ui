@@ -76,7 +76,7 @@ export const SettingDialog: FC<Props> = ({ open, onClose }) => {
             <div className="text-sm font-bold mb-2 text-black dark:text-neutral-200">
               {t('Theme')}
             </div>
-            
+
             <select
               className="w-full cursor-pointer bg-transparent p-2 text-neutral-700 dark:bg-neutral-700 dark:text-neutral-200"
               value={state.theme}
@@ -132,6 +132,40 @@ export const SettingDialog: FC<Props> = ({ open, onClose }) => {
                 })
               }
             />
+
+            {/* whether to enable custom personality */}
+            <div className="text-sm font-bold mt-4 mb-2 text-black dark:text-neutral-200">
+              {t('Enable Custom Personality')}
+            </div>
+
+            <input
+              type="checkbox"
+              className="w-6 h-6"
+              checked={state.enableCustomPersonality}
+              onChange={(event) =>
+                dispatch({
+                  field: 'enableCustomPersonality',
+                  value: event.target.checked,
+                })
+              }
+            />
+
+            {state.enableCustomPersonality ? (
+              <div>
+                {/* custom personality (textarea) */}
+                <div className="text-sm font-bold mt-4 mb-2 text-black dark:text-neutral-200">
+                  {t('Custom Personality')}
+                </div>
+
+                <textarea
+                  className="w-full p-2 border rounded-lg shadow border-neutral-500 text-neutral-900 dark:border-neutral-800 dark:border-opacity-50 dark:bg-neutral-700 dark:text-neutral-200"
+                  value={state.customPersonality || ''}
+                  onChange={(event) =>
+                    dispatch({ field: 'customPersonality', value: event.target.value })
+                  }
+                />
+              </div>
+            ) : null}
 
             <button
               type="button"

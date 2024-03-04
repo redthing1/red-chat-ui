@@ -3,4 +3,6 @@ export interface Settings {
   chatApiBaseUrl: string;
   codexApiBaseUrl: string | null;
   autoTitleConversations: boolean;
+  enableCustomPersonality: boolean;
+  customPersonality: string | null;
 }

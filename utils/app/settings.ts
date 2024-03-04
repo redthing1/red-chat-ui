@@ -8,6 +8,8 @@ export const getSettings = (): Settings => {
     chatApiBaseUrl: '/',
     codexApiBaseUrl: null,
     autoTitleConversations: false,
+    enableCustomPersonality: false,
+    customPersonality: null,
   };
   const settingsJson = localStorage.getItem(STORAGE_KEY);
   if (settingsJson) {
