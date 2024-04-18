@@ -81,12 +81,21 @@ export const OpenAIModels: Record<OpenAIModelID, OpenAIModel> = {
     maxLength: 10000000,
     tokenLimit: 10000000,
   },
-  // https://huggingface.co/bartowski/Meta-Llama-3-8B-Instruct-GGUF
+  // https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct/blob/main/tokenizer_config.json#L2053
+  // {% set loop_messages = messages %}
+  // {% for message in loop_messages %}
+  //     {% set content = '<|start_header_id|>' + message['role'] + '<|end_header_id|>\n\n'+ message['content'] | trim + '<|eot_id|>' %}
+  //     {% if loop.index0 == 0 %}
+  //         {% set content = bos_token + content %}
+  //     {% endif %}
+  //     {{ content }}
+  // {% endfor %}
+  // {{ '<|start_header_id|>assistant<|end_header_id|>\n\n' }}
   [OpenAIModelID.Llama3Chat]: {
     id: OpenAIModelID.Llama3Chat,
     name: 'Llama 3',
-    sysPrompt: '<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n$PERSONALITY',
-    defaultPersonality: 'You are a helpful and intelligent AI assistant who always answers the user\'s questions.',
+    sysPrompt: '<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n$PERSONALITY<|eot_id|>',
+    defaultPersonality: 'You are a helpful and intelligent AI assistant.',
     userPrefixPrompt: '<|start_header_id|>user<|end_header_id|>\n\n',
     userSuffixPrompt: '<|eot_id|>',
     assistantPrefixPrompt: '<|start_header_id|>assistant<|end_header_id|>\n\n',
