@@ -15,8 +15,10 @@ export interface OpenAIModel {
 }
 
 export enum OpenAIModelID {
+  GenericChatML = 'ChatML',
   Dolphin = 'Dolphin',
   Mistral = 'Mistral-Instruct',
+  Llama3Chat = 'Llama3-Chat',
   Llama2Chat = 'Llama2-Chat',
   OpenChat = 'OpenChat-3.5-1210',
   DeepSeek = 'DeepSeek-Coder-6.7B',
@@ -29,9 +31,21 @@ export enum OpenAIModelID {
 
 // in case the `DEFAULT_MODEL` environment variable is not set or set to an unsupported model
 // export const fallbackModelID = OpenAIModelID.Mistral;
-export const FALLBACK_OPENAI_MODEL_ID = OpenAIModelID.Dolphin;
+export const FALLBACK_OPENAI_MODEL_ID = OpenAIModelID.GenericChatML;
 
 export const OpenAIModels: Record<OpenAIModelID, OpenAIModel> = {
+  [OpenAIModelID.GenericChatML]: {
+    id: OpenAIModelID.GenericChatML,
+    name: 'ChatML',
+    sysPrompt: '<|im_start|>system\n$PERSONALITY<|im_end|>\n',
+    defaultPersonality: 'You are a helpful and intelligent AI assistant.',
+    userPrefixPrompt: '<|im_start|>user\n',
+    userSuffixPrompt: '<|im_end|>\n',
+    assistantPrefixPrompt: '<|im_start|>assistant\n',
+    assistantSuffixPrompt: '<|im_end|>\n',
+    maxLength: 10000000,
+    tokenLimit: 10000000,
+  },
   [OpenAIModelID.Dolphin]: {
     id: OpenAIModelID.Dolphin,
     name: 'Dolphin',
@@ -57,13 +71,26 @@ export const OpenAIModels: Record<OpenAIModelID, OpenAIModel> = {
   [OpenAIModelID.Llama2Chat]: {
     // https://old.reddit.com/r/LocalLLaMA/comments/155po2p/get_llama_2_prompt_format_right/
     id: OpenAIModelID.Llama2Chat,
-    name: 'Llama2-Chat',
+    name: 'Llama 2',
     sysPrompt: '<s>[INST] <<SYS>>\n$PERSONALITY\n<</SYS>>\n\n',
     defaultPersonality: 'You are a helpful and intelligent AI assistant who always answers the user\'s questions. You are designed to assist the user in any way you can.',
     userPrefixPrompt: '',
     userSuffixPrompt: ' [/INST] ',
     assistantPrefixPrompt: '',
     assistantSuffixPrompt: '</s><s>[INST] ',
+    maxLength: 10000000,
+    tokenLimit: 10000000,
+  },
+  // https://huggingface.co/bartowski/Meta-Llama-3-8B-Instruct-GGUF
+  [OpenAIModelID.Llama3Chat]: {
+    id: OpenAIModelID.Llama3Chat,
+    name: 'Llama 3',
+    sysPrompt: '<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n$PERSONALITY',
+    defaultPersonality: 'You are a helpful and intelligent AI assistant who always answers the user\'s questions.',
+    userPrefixPrompt: '<|start_header_id|>user<|end_header_id|>\n\n',
+    userSuffixPrompt: '<|eot_id|>',
+    assistantPrefixPrompt: '<|start_header_id|>assistant<|end_header_id|>\n\n',
+    assistantSuffixPrompt: '<|eot_id|>',
     maxLength: 10000000,
     tokenLimit: 10000000,
   },
