@@ -17,7 +17,7 @@ export interface OpenAIModel {
 export enum OpenAIModelID {
   Dolphin = 'Dolphin',
   Mistral = 'Mistral-Instruct',
-  LlamaChat = 'Llama-Chat',
+  Llama2Chat = 'Llama2-Chat',
   OpenChat = 'OpenChat-3.5-1210',
   DeepSeek = 'DeepSeek-Coder-6.7B',
   Solar = 'Solar',
@@ -54,21 +54,16 @@ export const OpenAIModels: Record<OpenAIModelID, OpenAIModel> = {
     maxLength: 10000000,
     tokenLimit: 10000000,
   },
-  [OpenAIModelID.LlamaChat]: {
+  [OpenAIModelID.Llama2Chat]: {
     // https://old.reddit.com/r/LocalLLaMA/comments/155po2p/get_llama_2_prompt_format_right/
-    // <s>[INST] <<SYS>>
-    // {{ system_prompt }}
-    // <</SYS>>
-
-    // {{ user_message }} [/INST]
-    id: OpenAIModelID.LlamaChat,
-    name: 'Llama-Chat',
-    sysPrompt: '<s>[INST] <<SYS>>\n$PERSONALITY\n<</SYS>> [/INST]</s>',
+    id: OpenAIModelID.Llama2Chat,
+    name: 'Llama2-Chat',
+    sysPrompt: '<s>[INST] <<SYS>>\n$PERSONALITY\n<</SYS>>\n\n',
     defaultPersonality: 'You are a helpful and intelligent AI assistant who always answers the user\'s questions. You are designed to assist the user in any way you can.',
-    userPrefixPrompt: '<s>[INST] ',
+    userPrefixPrompt: '',
     userSuffixPrompt: ' [/INST] ',
     assistantPrefixPrompt: '',
-    assistantSuffixPrompt: '</s>',
+    assistantSuffixPrompt: '</s><s>[INST] ',
     maxLength: 10000000,
     tokenLimit: 10000000,
   },
