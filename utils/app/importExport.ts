@@ -64,11 +64,12 @@ export function cleanData(data: SupportedExportFormats): LatestExportFormat {
   throw new Error('Unsupported data format');
 }
 
-function currentDate() {
+function currentDateFriendlyString() {
   const date = new Date();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-  return `${month}-${day}`;
+  const year = date.getFullYear(); // get the full year
+  const month = (date.getMonth() + 1).toString().padStart(2, '0'); // add leading zero if month is single digit
+  const day = date.getDate().toString().padStart(2, '0'); // add leading zero if day is single digit
+  return `${year}${month}${day}`; // concatenate the year, month, and day
 }
 
 export const exportData = () => {
@@ -100,7 +101,7 @@ export const exportData = () => {
   });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
-  link.download = `chatbot_ui_history_${currentDate()}.json`;
+  link.download = `redchat_history_${currentDateFriendlyString()}.json`;
   link.href = url;
   link.style.display = 'none';
   document.body.appendChild(link);
