@@ -46,7 +46,7 @@ export const TemperatureSlider: FC<Props> = ({
         className="cursor-pointer"
         type="range"
         min={0}
-        max={1}
+        max={2}
         step={0.1}
         value={temperature}
         onChange={handleChange}
@@ -56,10 +56,13 @@ export const TemperatureSlider: FC<Props> = ({
           <span className="absolute">{t('Precise')}</span>
         </li>
         <li className="flex justify-center">
-          <span className="absolute">{t('Neutral')}</span>
+          <span className="absolute">{t('Balanced')}</span>
         </li>
         <li className="flex justify-center">
           <span className="absolute">{t('Creative')}</span>
+        </li>
+        <li className="flex justify-center">
+          <span className="absolute">{t('Wacky')}</span>
         </li>
       </ul>
     </div>
